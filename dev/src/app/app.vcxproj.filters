@@ -3,8 +3,10 @@
   <ItemGroup>
     <ClCompile Include="private\build.cpp" />
     <ClCompile Include="private\main.cpp" />
+    <ClCompile Include="private\gui\imguiFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="private\build.h" />
+    <ClInclude Include="private\gui\imguiFunctions.h" />
   </ItemGroup>
 </Project>

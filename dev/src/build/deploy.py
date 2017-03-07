@@ -3,7 +3,7 @@ import os
 
 #config params
 internals = []
-externals = [ 'googletest', 'assimp' ]
+externals = [ 'imgui', 'glfw', 'gl3w' ]
 
 intDir = '../internal/' #relative to solution dir
 extDir = '../external/' #relative to solution dir

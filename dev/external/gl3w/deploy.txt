@@ -1,0 +1,3 @@
+x64_Debug, x64_Release
+x64/Debug/gl3w.lib;
+x64/Release/gl3w.lib;

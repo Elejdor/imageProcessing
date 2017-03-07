@@ -1,0 +1,3 @@
+x64_Debug, x64_Release
+x64/Debug/imgui.lib;
+x64/Release/imgui.lib;

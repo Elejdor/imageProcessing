@@ -3,7 +3,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B66C70A5-EF5B-42C8-BD70-B992F436A94B}</ProjectGuid>
     <RootNamespace>utils</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.10240.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -57,17 +57,16 @@
     </BuildLog>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="private\absolutePath.cpp" />
     <ClCompile Include="private\build.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="private\build.h" />
-    <ClInclude Include="public\absolutePath.h" />
-    <ClInclude Include="public\commonUtils.h" />
+    <ClInclude Include="public\CImg.h" />
     <ClInclude Include="public\hash.h" />
     <ClInclude Include="public\macros.h" />
+    <ClInclude Include="public\point.h" />
     <ClInclude Include="public\types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
