@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Common</_PropertySheetDisplayName>
+    <OutDir>$(SolutionDir)..\bin\$(Platform)_$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\bin\temp\$(Platform)_$(Configuration)\$(ProjectName)\</IntDir>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir)\public</AdditionalIncludeDirectories>
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <EnablePREfast>false</EnablePREfast>
+      <PrecompiledHeaderFile>build.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <BuildLog>
+      <Path>$(IntDir)$(MSBuildProjectName ).log</Path>
+    </BuildLog>
+    <PreBuildEvent>
+      <Command>call "python.exe" "$(SolutionDir)build\deploy.py" "$(Platform)_$(Configuration)" $(SolutionDir)</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup />
+</Project>

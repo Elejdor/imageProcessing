@@ -1,0 +1,7 @@
+*.sdf
+*.opensdf
+*.vcxproj.user
+.vs
+*/bin/
+*.ipch
+*.VC.db
