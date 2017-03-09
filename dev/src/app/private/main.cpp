@@ -8,27 +8,17 @@
 #include "../../../external/glfw/include/GLFW/glfw3.h"
 
 #include "../../rendering/public/imguiFunctions.h"
+#include "../../rendering/public/rendering.h"
 #include <stdio.h>
-
-static void error_callback( int error, const char* description )
-{
-	fprintf( stderr, "Error %d: %s\n", error, description );
-}
 
 int main( int, char** )
 {
-	// Setup window
-	glfwSetErrorCallback( error_callback );
-	if ( !glfwInit() )
-		return 1;
+	rendering::Renderer renderer;
+	renderer.Init();
 
-	glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 3 );
-	glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 3 );
-	glfwWindowHint( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE );
-
+	gl3wInit();
 	GLFWwindow* window = glfwCreateWindow( 1280, 720, "Image Processing", NULL, NULL );
 	glfwMakeContextCurrent( window );
-	gl3wInit();
 
 	// Setup ImGui binding
 	ImGui_ImplGlfwGL3_Init( window, true );

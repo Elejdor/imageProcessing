@@ -3,6 +3,8 @@
   <ItemGroup>
     <ClCompile Include="private\build.cpp" />
     <ClCompile Include="private\imguiFunctions.cpp" />
+    <ClCompile Include="private\gfViewport.cpp" />
+    <ClCompile Include="private\rendering.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="private\build.h" />
@@ -10,5 +12,6 @@
     <ClInclude Include="public\gfViewport.h" />
     <ClInclude Include="public\imguiFunctions.h" />
     <ClInclude Include="private\shaderData.h" />
+    <ClInclude Include="public\rendering.h" />
   </ItemGroup>
 </Project>

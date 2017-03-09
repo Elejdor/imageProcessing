@@ -255,7 +255,7 @@ bool ImGui_ImplGlfwGL3_CreateDeviceObjects()
 	return true;
 }
 
-void    ImGui_ImplGlfwGL3_InvalidateDeviceObjects()
+void ImGui_ImplGlfwGL3_InvalidateDeviceObjects()
 {
 	if ( g_VaoHandle ) glDeleteVertexArrays( 1, &g_VaoHandle );
 	if ( g_VboHandle ) glDeleteBuffers( 1, &g_VboHandle );
@@ -281,7 +281,7 @@ void    ImGui_ImplGlfwGL3_InvalidateDeviceObjects()
 	}
 }
 
-bool    ImGui_ImplGlfwGL3_Init( GLFWwindow* window, bool install_callbacks )
+bool ImGui_ImplGlfwGL3_Init( GLFWwindow* window, bool install_callbacks )
 {
 	g_Window = window;
 

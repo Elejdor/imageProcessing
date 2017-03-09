@@ -61,6 +61,8 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="private\imguiFunctions.cpp" />
+    <ClCompile Include="private\rendering.cpp" />
+    <ClCompile Include="private\gfViewport.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="private\build.h" />
@@ -68,6 +70,7 @@
     <ClInclude Include="public\CImg.h" />
     <ClInclude Include="public\gfViewport.h" />
     <ClInclude Include="public\imguiFunctions.h" />
+    <ClInclude Include="public\rendering.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
