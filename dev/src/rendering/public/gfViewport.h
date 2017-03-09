@@ -3,6 +3,7 @@
 class GfViewport
 {
 public:
-
+	
 protected:
+
 };

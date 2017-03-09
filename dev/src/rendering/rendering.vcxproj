@@ -64,13 +64,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="private\build.h" />
+    <ClInclude Include="private\shaderData.h" />
     <ClInclude Include="public\CImg.h" />
     <ClInclude Include="public\gfViewport.h" />
-    <ClInclude Include="public\hash.h" />
     <ClInclude Include="public\imguiFunctions.h" />
-    <ClInclude Include="public\macros.h" />
-    <ClInclude Include="public\point.h" />
-    <ClInclude Include="public\types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
