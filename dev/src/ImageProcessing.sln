@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "app", "app\app.vcxproj", "{
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "utils", "utils\utils.vcxproj", "{B66C70A5-EF5B-42C8-BD70-B992F436A94B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rendering", "rendering\rendering.vcxproj", "{650BB1F2-EBA5-43A0-AA55-E7ED0ED7CF65}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,10 @@ Global
 		{B66C70A5-EF5B-42C8-BD70-B992F436A94B}.Debug|x64.Build.0 = Debug|x64
 		{B66C70A5-EF5B-42C8-BD70-B992F436A94B}.Release|x64.ActiveCfg = Release|x64
 		{B66C70A5-EF5B-42C8-BD70-B992F436A94B}.Release|x64.Build.0 = Release|x64
+		{650BB1F2-EBA5-43A0-AA55-E7ED0ED7CF65}.Debug|x64.ActiveCfg = Debug|x64
+		{650BB1F2-EBA5-43A0-AA55-E7ED0ED7CF65}.Debug|x64.Build.0 = Debug|x64
+		{650BB1F2-EBA5-43A0-AA55-E7ED0ED7CF65}.Release|x64.ActiveCfg = Release|x64
+		{650BB1F2-EBA5-43A0-AA55-E7ED0ED7CF65}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

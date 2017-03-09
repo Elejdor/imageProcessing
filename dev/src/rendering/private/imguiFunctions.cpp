@@ -1,8 +1,10 @@
-#include "../build.h"
-#include "../../../../external/imgui/include/imgui.h"
+#include "build.h"
+#include "../../../external/imgui/include/imgui.h"
 #include "imguiFunctions.h"
 
-#include <GL/gl3w.h>
+#pragma comment( lib, "opengl32" )
+
+#include "../../../external/gl3w/GL/gl3w.h"
 #include "../../../external/glfw/include/GLFW/glfw3.h"
 
 #ifdef _WIN32

@@ -7,17 +7,12 @@
 #include <GL/gl3w.h>
 #include "../../../external/glfw/include/GLFW/glfw3.h"
 
-#include "gui/imguiFunctions.h"
+#include "../../rendering/public/imguiFunctions.h"
 #include <stdio.h>
 
 static void error_callback( int error, const char* description )
 {
 	fprintf( stderr, "Error %d: %s\n", error, description );
-}
-
-void InitGL()
-{
-
 }
 
 int main( int, char** )
