@@ -211,6 +211,7 @@ bool ImGui_ImplGlfwGL3_CreateDeviceObjects()
 	g_ShaderHandle = glCreateProgram();
 	g_VertHandle = glCreateShader( GL_VERTEX_SHADER );
 	g_FragHandle = glCreateShader( GL_FRAGMENT_SHADER );
+
 	glShaderSource( g_VertHandle, 1, &shaders::vsImgui, 0 );
 	glShaderSource( g_FragHandle, 1, &shaders::fsImgui, 0 );
 	glCompileShader( g_VertHandle );

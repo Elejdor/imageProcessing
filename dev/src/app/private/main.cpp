@@ -13,7 +13,6 @@ int main( int, char** )
 	GfViewport vp;
 	renderer.SetMainWindow( &vp );
 
-
 	// Main loop
 	while ( renderer.Render() );
 

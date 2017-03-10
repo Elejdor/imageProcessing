@@ -11,5 +11,8 @@ GfViewport::GfViewport()
 void GfViewport::InitWindow()
 {
 	SC_ASSERT( m_window == nullptr, "Window already created" );
-	m_window = glfwCreateWindow( 1280, 720, "Image Processing", NULL, NULL );
+	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+	const GLFWvidmode* mode = glfwGetVideoMode( monitor );
+	const Float scale = 0.9f;
+	m_window = glfwCreateWindow( ( Int32 )( mode->width * scale ), ( Int32 )( mode->height * scale ), "Image Processing", NULL, NULL );
 }
