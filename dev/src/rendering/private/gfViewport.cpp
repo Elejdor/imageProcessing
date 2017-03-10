@@ -2,6 +2,12 @@
 #include "gfViewport.h"
 #include "../../../external/glfw/include/GLFW/glfw3.h"
 
+GfViewport::GfViewport()
+	: m_window( nullptr )
+{
+	InitWindow();
+}
+
 void GfViewport::InitWindow()
 {
 	SC_ASSERT( m_window == nullptr, "Window already created" );

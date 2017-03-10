@@ -1,9 +1,6 @@
 #include "build.h"
-#include "../../../external/imgui/include/imgui.h"
 #include "imguiFunctions.h"
 #include "shaderData.h"
-
-#pragma comment( lib, "opengl32" )
 
 #include "../../../external/gl3w/GL/gl3w.h"
 #include "../../../external/glfw/include/GLFW/glfw3.h"
@@ -14,7 +11,6 @@
 #define GLFW_EXPOSE_NATIVE_WGL
 #include "../../../external/glfw/include/GLFW/glfw3native.h"
 #endif
-
 
 // ImGui GLFW binding with OpenGL3 + shaders
 // In this binding, ImTextureID is used to store an OpenGL 'GLuint' texture identifier. Read the FAQ about ImTextureID in imgui.cpp.

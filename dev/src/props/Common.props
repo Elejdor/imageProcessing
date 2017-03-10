@@ -23,6 +23,9 @@
     <PreBuildEvent>
       <Command>call "python.exe" "$(SolutionDir)build\deploy.py" "$(Platform)_$(Configuration)" $(SolutionDir)</Command>
     </PreBuildEvent>
+    <Lib>
+      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup />
 </Project>

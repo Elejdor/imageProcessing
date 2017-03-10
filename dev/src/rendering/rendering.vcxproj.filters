@@ -10,8 +10,8 @@
     <ClInclude Include="private\build.h" />
     <ClInclude Include="public\CImg.h" />
     <ClInclude Include="public\gfViewport.h" />
-    <ClInclude Include="public\imguiFunctions.h" />
     <ClInclude Include="private\shaderData.h" />
     <ClInclude Include="public\rendering.h" />
+    <ClInclude Include="private\imguiFunctions.h" />
   </ItemGroup>
 </Project>

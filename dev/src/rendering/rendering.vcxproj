@@ -39,6 +39,14 @@
     <BuildLog>
       <Path>$(IntDir)$(MSBuildProjectName).log</Path>
     </BuildLog>
+    <Lib>
+      <AdditionalDependencies>imgui.lib;gl3w.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+    </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -55,6 +63,14 @@
     <BuildLog>
       <Path>$(IntDir)$(MSBuildProjectName).log</Path>
     </BuildLog>
+    <Lib>
+      <AdditionalDependencies>imgui.lib;gl3w.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+    </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="private\build.cpp">
@@ -69,7 +85,7 @@
     <ClInclude Include="private\shaderData.h" />
     <ClInclude Include="public\CImg.h" />
     <ClInclude Include="public\gfViewport.h" />
-    <ClInclude Include="public\imguiFunctions.h" />
+    <ClInclude Include="private\imguiFunctions.h" />
     <ClInclude Include="public\rendering.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

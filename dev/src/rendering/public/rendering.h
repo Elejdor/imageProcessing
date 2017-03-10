@@ -10,10 +10,15 @@ namespace rendering
 	class Renderer
 	{
 	public:
+		Renderer();
+		~Renderer();
+
 		Bool Init();
-		void RegisterViewport( GfViewport* vp );
+		Bool Render();
+		void SetMainWindow( GfViewport* vp );
 
 	private:
-		std::vector< GfViewport* > m_viewports;
+		std::vector< GfViewport* >	m_viewports;
+		GfViewport*					m_viewport;
 	};
 }
