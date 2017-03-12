@@ -32,6 +32,8 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>
+      </PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -54,6 +56,8 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>
+      </PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -76,6 +80,7 @@
     <ClCompile Include="private\build.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="private\image.cpp" />
     <ClCompile Include="private\imguiFunctions.cpp" />
     <ClCompile Include="private\rendering.cpp" />
     <ClCompile Include="private\gfViewport.cpp" />
@@ -83,9 +88,11 @@
   <ItemGroup>
     <ClInclude Include="private\build.h" />
     <ClInclude Include="private\shaderData.h" />
-    <ClInclude Include="public\CImg.h" />
+    <ClInclude Include="private\stb_image.h" />
+    <ClInclude Include="private\stb_image_write.h" />
     <ClInclude Include="public\gfViewport.h" />
     <ClInclude Include="private\imguiFunctions.h" />
+    <ClInclude Include="public\image.h" />
     <ClInclude Include="public\rendering.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

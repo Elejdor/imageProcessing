@@ -2,6 +2,7 @@
 
 #include "../../rendering/public/rendering.h"
 #include "../../rendering/public/gfViewport.h"
+#include "../../rendering/public/image.h"
 
 #include <stdio.h>
 

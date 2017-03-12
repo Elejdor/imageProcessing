@@ -63,7 +63,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="private\build.h" />
-    <ClInclude Include="public\CImg.h" />
     <ClInclude Include="public\hash.h" />
     <ClInclude Include="public\macros.h" />
     <ClInclude Include="public\point.h" />

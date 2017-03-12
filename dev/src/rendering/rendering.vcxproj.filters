@@ -5,13 +5,16 @@
     <ClCompile Include="private\imguiFunctions.cpp" />
     <ClCompile Include="private\gfViewport.cpp" />
     <ClCompile Include="private\rendering.cpp" />
+    <ClCompile Include="private\image.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="private\build.h" />
-    <ClInclude Include="public\CImg.h" />
     <ClInclude Include="public\gfViewport.h" />
     <ClInclude Include="private\shaderData.h" />
     <ClInclude Include="public\rendering.h" />
     <ClInclude Include="private\imguiFunctions.h" />
+    <ClInclude Include="private\stb_image.h" />
+    <ClInclude Include="private\stb_image_write.h" />
+    <ClInclude Include="public\image.h" />
   </ItemGroup>
 </Project>
