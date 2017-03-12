@@ -4,6 +4,7 @@
 #include <vector>
 
 class GfViewport;
+class Image;
 
 namespace rendering
 {
@@ -16,9 +17,14 @@ namespace rendering
 		Bool Init();
 		Bool Render();
 		void SetMainWindow( GfViewport* vp );
+		void SetImage( Image* img );
+
+	private:
+		void RenderImage();
 
 	private:
 		std::vector< GfViewport* >	m_viewports;
 		GfViewport*					m_viewport;
+		Image*						m_image;
 	};
 }
