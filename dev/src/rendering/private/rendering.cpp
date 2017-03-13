@@ -37,21 +37,26 @@ namespace shaders
 namespace rendering
 {
 	GLint g_imageShader = 0;
+	GLint g_texAttrib = 0;
+	GLint g_mvpAttrib = 0;
 
-	class RenderImage
+	class ImageRenderer
 	{
 	public:
-		RenderImage( Image* img )
+		ImageRenderer( Image* img )
 			: m_img( img ) 
 		{ 
+			CreateBuffers();
 		}
 
 		void Draw()
 		{
-
 			if ( m_img )
 			{
-				// draw
+				glUseProgram( g_imageShader );
+
+				glUniform1i( g_texAttrib, 0 );
+
 				glEnableVertexAttribArray( 0 );
 				glBindBuffer( GL_ARRAY_BUFFER, m_vb );
 				glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, ( void* )0 );
@@ -68,7 +73,17 @@ namespace rendering
 			if ( m_img )
 			{
 				// texture
-				glGetIntegerv( GL_TEXTURE_BINDING_2D, &m_textureBinding );
+				glGenTextures( 1, &m_textureBinding );
+				glBindTexture( GL_TEXTURE_2D, m_textureBinding );
+				glTexImage2D( GL_TEXTURE_2D,
+							  0,
+							  GL_RGB,
+							  m_img->GetWidth(), m_img->GetHeight(),
+							  0,
+							  GL_BGR,
+							  GL_UNSIGNED_BYTE,
+							  m_img->GetData() );
+
 
 				// plane
 				const Uint32 indices[] = { 0, 1, 2, 0, 3, 1 };
@@ -94,7 +109,7 @@ namespace rendering
 		Image* m_img;
 		GLuint m_ib;
 		GLuint m_vb;
-		GLint  m_textureBinding;
+		GLuint m_textureBinding;
 	};
 
 	static void error_callback( int error, const char* description )
@@ -151,9 +166,17 @@ namespace rendering
 			glAttachShader( g_imageShader, fShader );
 
 			glLinkProgram( g_imageShader );
-			glProgramCreated = true;
-		}
+			g_texAttrib = glGetUniformLocation( g_imageShader, "Texture" );
+			g_mvpAttrib = glGetUniformLocation( g_imageShader, "MVP" );
 
+			glProgramCreated = true;
+
+			// image test
+			Image iss;
+			iss.Load( "iss.jpeg" );
+
+			ImageRenderer rend( &iss );
+		}
 
 		ImGui_ImplGlfwGL3_NewFrame();
 

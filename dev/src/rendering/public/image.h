@@ -11,6 +11,10 @@ public:
 
 	Uint8* GetData() const { return m_data; }
 	Uint32 GetSize() const { return m_size; }
+
+	Uint32 GetWidth() const { return m_width; }
+	Uint32 GetHeight() const { return m_height; }
+
 private:
 	Uint32 m_width;
 	Uint32 m_height;
