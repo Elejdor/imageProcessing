@@ -10,27 +10,28 @@
 #include "../public/image.h"
 
 namespace shaders
-{
+{	
 	char* vsTexture =
 		"#version 330\n"
-		"uniform mat4 ProjMtx;\n"
-		"in vec2 Position;\n"
-		"in vec2 UV;\n"
-		"out vec2 Frag_UV;\n"
+		"layout(location = 0) in vec3 vertexPosition_modelspace;\n"
+		"layout(location = 1) in vec2 vertexUV;\n"
+
+		"out vec2 UV;\n"
 		"void main()\n"
 		"{\n"
-		"	Frag_UV = UV;\n"
-		"	gl_Position = ProjMtx * vec4( Position.xy, 0, 1 );\n"
+		"	gl_Position.xyz = vertexPosition_modelspace;\n"
+		"	gl_Position.w = 1.0;\n"
+		"   UV = vertexUV;\n"
 		"}\n";
 
 	char* fsTexture =
 		"#version 330\n"
-		"uniform sampler2D Texture;\n"
-		"in vec2 Frag_UV;\n"
-		"out vec4 Out_Color;\n"
+		"in vec2 UV;\n"
+		"out vec3 color;\n"
+		"uniform sampler2D texSampler;\n"
 		"void main()\n"
 		"{\n"
-		"	Out_Color = texture( Texture, Frag_UV.st );\n"
+		"	color = texture( texSampler, UV ).rgb;\n"
 		"}\n";
 }
 
@@ -46,25 +47,76 @@ namespace rendering
 		ImageRenderer( Image* img )
 			: m_img( img ) 
 		{ 
-			CreateBuffers();
+			glGenVertexArrays( 1, &m_vb );
+			glGenTextures( 1, &m_textureBinding );
+			glBindTexture( GL_TEXTURE_2D, m_textureBinding );
+
+			glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, m_img->GetWidth(), m_img->GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, m_img->GetData() );
+
+			glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+			glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
 		}
 
 		void Draw()
 		{
-			if ( m_img )
+			glUseProgram( g_imageShader );
+			glBindVertexArray( m_vb );
+
+			static const GLfloat g_vertex_buffer_data[] = {
+				-1.0f, -1.0f, 0.0f,
+				1.0f, -1.0f, 0.0f,
+				-1.0f,  1.0f, 0.0f,
+				1.0f,  1.0f, 0.0f
+			};
+
+			GLuint vertexbuffer;
+			// Generate 1 buffer, put the resulting identifier in vertexbuffer
+			glGenBuffers( 1, &vertexbuffer );
+			// The following commands will talk about our 'vertexbuffer' buffer
+			glBindBuffer( GL_ARRAY_BUFFER, vertexbuffer );
+			// Give our vertices to OpenGL.
+			glBufferData( GL_ARRAY_BUFFER, sizeof( g_vertex_buffer_data ), g_vertex_buffer_data, GL_STATIC_DRAW );
+
+			// 1rst attribute buffer : vertices
+			glEnableVertexAttribArray( 0 );
+			glBindBuffer( GL_ARRAY_BUFFER, vertexbuffer );
+			glVertexAttribPointer(
+				0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+				3,                  // size
+				GL_FLOAT,           // type
+				GL_FALSE,           // normalized?
+				0,                  // stride
+				( void* )0            // array buffer offset
+			);
+
+			const Float UVs[] =
 			{
-				glUseProgram( g_imageShader );
+				1.0f, 1.0f,
+				0.0f, 1.0f,
+				1.0f, 0.0f,
+				0.0f, 0.0f
+			};
 
-				glUniform1i( g_texAttrib, 0 );
+			GLuint uvBuffer;
+			glGenBuffers( 1, &uvBuffer );
+			glBindBuffer( GL_ARRAY_BUFFER, uvBuffer );
+			glBufferData( GL_ARRAY_BUFFER, sizeof( UVs ), UVs, GL_STATIC_DRAW );
 
-				glEnableVertexAttribArray( 0 );
-				glBindBuffer( GL_ARRAY_BUFFER, m_vb );
-				glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, ( void* )0 );
+			glEnableVertexAttribArray( 1 );
+			glBindBuffer( GL_ARRAY_BUFFER, uvBuffer );
+			glVertexAttribPointer(
+				1,
+				2,                  // size
+				GL_FLOAT,           // type
+				GL_FALSE,           // normalized?
+				0,                  // stride
+				0            // array buffer offset
+			);
 
-				glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_ib );
-
-				glDrawElements( GL_TRIANGLES, 6, GL_UNSIGNED_INT, ( void* )0 );
-			}
+			// Draw the triangle !
+			glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 ); // Starting from vertex 0; 3 vertices total -> 1 triangle
+			glDisableVertexAttribArray( 1 );
+			glDisableVertexAttribArray( 0 );
 		}
 
 	private:
@@ -93,6 +145,7 @@ namespace rendering
 					0.0f, 0.0f, 0.0f,
 					1.0f, 1.0f, 0.0f
 				};
+
 
 				// create buffers
 				glGenBuffers( 1, &m_vb );
@@ -166,17 +219,18 @@ namespace rendering
 			glAttachShader( g_imageShader, fShader );
 
 			glLinkProgram( g_imageShader );
-			g_texAttrib = glGetUniformLocation( g_imageShader, "Texture" );
-			g_mvpAttrib = glGetUniformLocation( g_imageShader, "MVP" );
+
+			GLint n = 0;
+			glGetProgramiv( g_imageShader, GL_ACTIVE_UNIFORMS, &n );
+
+			g_texAttrib = glGetUniformLocation( g_imageShader, "texSampler" );
+			//g_mvpAttrib = glGetUniformLocation( g_imageShader, "MVP" );
 
 			glProgramCreated = true;
-
-			// image test
-			Image iss;
-			iss.Load( "iss.jpeg" );
-
-			ImageRenderer rend( &iss );
 		}
+		// image test
+
+
 
 		ImGui_ImplGlfwGL3_NewFrame();
 
@@ -213,7 +267,13 @@ namespace rendering
 		glClearColor( clear_color.x, clear_color.y, clear_color.z, clear_color.w );
 		glClear( GL_COLOR_BUFFER_BIT );
 
-		RenderImage();
+		static Image iss;
+		if ( iss.GetData() == nullptr )
+			iss.Load( "iss.jpeg" );
+
+		ImageRenderer rend( &iss );
+		rend.Draw();
+
 		ImGui::Render();
 
 		glfwSwapBuffers( m_viewport->GetWindow() );
