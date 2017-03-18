@@ -83,6 +83,43 @@ namespace gf
 		m_currentPass = 0;
 	}
 
+	const SurroundingInfo& ImageProcessor::GetCurrentSurrounding()
+	{
+		Point2 pos = m_currentPos - Point2( 1, 1 );
+
+		const Uint8* dataPtr = static_cast< Uint8* >( m_src->GetData() );
+
+		Uint8 row = 0;
+		for ( Uint8 i = 0; i < 3; ++i )
+		{
+			if ( ( Uint32 )pos.x >= 0 && ( Uint32 )pos.x < m_src->GetWidth() )
+			{
+				if ( ( Uint32 )pos.y >= 0 && ( Uint32 )pos.x < m_src->GetHeight() )
+				{
+					const Uint8* const dataPtr = static_cast< Uint8* >( m_src->GetData() );
+					m_surrounding.values.arr[ i + row * 3 ] = dataPtr[ pos.x + pos.y * m_src->GetWidth() ];
+					m_surrounding.mask[ i + row * 3 ] = 1;
+				}
+				else
+				{
+					m_surrounding.mask[ i + row * 3 ] = 0;
+				}
+			}
+
+			++pos.x;
+			if ( i == 2 )
+			{
+				if ( row == 2 )
+					break;
+
+				++pos.y;
+				++row;
+			}
+		}
+
+		return m_surrounding;
+	}
+
 	////////////////////////////////////////////////////////////////////////////
 	//// BrightnessProcessor
 	////////////////////////////////////////////////////////////////////////////

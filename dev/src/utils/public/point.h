@@ -4,15 +4,31 @@
 
 struct Point2
 {
-	int x, y;
+	Int32 x, y;
 
-	void operator+( Point2 other )
+	Point2()
+		: x( 0 )
+		, y( 0 )
+	{ }
+
+	Point2( Int32 x, Int32 y )
+		: x( x )
+		, y( y )
+	{ }
+
+	Point2 operator-( Point2 other )
 	{
-		x += other.x;
-		y += other.y;
+		Point2 res( x - other.x, y - other.y );
+		return res;
 	}
 
-	void operator-( Point2 other )
+	Point2 operator+( Point2 other )
+	{
+		Point2 res( x + other.x, y + other.y );
+		return res;
+	}
+
+	void operator-=( Point2 other )
 	{
 		x -= other.x;
 		y -= other.y;
