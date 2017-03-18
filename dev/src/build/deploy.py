@@ -26,7 +26,7 @@ def ParsePaths( pathsString ):
 	return result
 	
 def CopyFile( src, dst ):
-	print 'Copying [ %r ] to [ %r ]' % ( src, dst )
+	print( 'Copying [ %r ] to [ %r ]' % ( src, dst ) )
 	open( dst, 'wb' ).write( open( src, 'rb' ).read() )
 
 def IsFileNewer( a, b ):
@@ -46,7 +46,7 @@ def CopyFiles( outDir, root, paths ):
 			elif IsFileNewer( srcPath, dstPath ):
 				CopyFile( srcPath, dstPath )
 		else:
-			print 'Source file [ %r ] does not exist' % srcPath
+			print( 'Source file [ %r ] does not exist' % srcPath )
 			
 def FindConfig( config, supportedList ):
 	result = 0
@@ -64,13 +64,13 @@ def CopyLibs( outDir, config, rootDir, libs ):
 			line = file.readline() #first line is list of supported configurations
 			configIndex = FindConfig( config, line )
 			if ( configIndex == -1 ):
-				print 'Unsupported config'
+				print( 'Unsupported config' )
 			else:
 				paths = file.readlines()[ configIndex ]
-				#print 'Files to deploy: %r' % paths
+				#print( 'Files to deploy: %r' % paths )
 				CopyFiles( outDir, rootDir + lib + '/', paths )
 		else:
-			print 'Missing deploy file [ %s ]' % os.path.abspath( deployCfg )
+			print( 'Missing deploy file [ %s ]' % os.path.abspath( deployCfg ) )
 
 script, config, solutionDir = argv
 outDir = solutionDir + outDir + config + '/'
@@ -82,5 +82,5 @@ if ( lastChar == '/' ) | ( lastChar == '\\' ):
 	CopyLibs( outDir, config, intDir, internals )
 	CopyLibs( outDir, config, extDir, externals )
 else:
-	print "Directory path should end with a trailing slash [ %r ]" % outDir
+	print( "Directory path should end with a trailing slash [ %r ]" % outDir )
 
