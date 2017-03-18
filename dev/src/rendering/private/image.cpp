@@ -36,7 +36,7 @@ void Image::Load( const char * fileName )
 	m_data = result;
 	m_width = w;
 	m_height = h;
-	m_size = w * h * comp;
+	m_size = w * h;
 }
 
 void Image::Save( const char * fileName )

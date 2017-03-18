@@ -10,6 +10,7 @@ public:
 	void Save( const char* fileName );
 
 	Uint8* GetData() const { return m_data; }
+	Uint32 GetDataSize() const { return 3 * m_size; }
 	Uint32 GetSize() const { return m_size; }
 
 	Uint32 GetWidth() const { return m_width; }
