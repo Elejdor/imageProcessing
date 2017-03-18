@@ -34,6 +34,10 @@ void Test1( rendering::Renderer* renderer )
 	contrastPass.SetContrast( 10 );
 	imageEffect.AddPass( &contrastPass );
 
+	// negate
+	gf::effects::Negate negatePass;
+	imageEffect.AddPass( &negatePass );
+
 	imageEffect.ProcessImage( true );
 	
 	gf::Image renderImg;

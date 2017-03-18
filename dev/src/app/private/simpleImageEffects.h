@@ -57,5 +57,18 @@ namespace gf
 			Uint8  m_valueLUT[ 256 ];
 			Int32  m_brightness;
 		};
+
+
+		class Negate : public gf::IProcessingPass
+		{
+		public:
+			virtual Bool OnStarted( ImageProcessor* proc ) override;
+
+			virtual Uint8 Process( Uint8 input ) override;
+			virtual Color3 Process( Color3 input ) override;
+
+		private:
+			Uint8  m_valueLUT[ 256 ];
+		};
 	}
 }

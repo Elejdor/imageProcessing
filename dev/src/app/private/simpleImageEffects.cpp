@@ -122,5 +122,32 @@ namespace gf
 		{
 			return Color3();
 		}
-	}
+
+		//////////////////////////////////////////////////////////////////////////
+		// Negate
+		//////////////////////////////////////////////////////////////////////////
+		Bool Negate::OnStarted( ImageProcessor * proc )
+		{
+			for ( Uint16 i = 0; i < 255; ++i )
+			{
+				m_valueLUT[ i ] = 255 - i;
+			}
+
+			return true;
+		}
+
+		Uint8 Negate::Process( Uint8 input )
+		{
+			return m_valueLUT[ input ];
+		}
+
+		Color3 Negate::Process( Color3 input )
+		{
+			input.r = m_valueLUT[ input.r ];
+			input.g = m_valueLUT[ input.g ];
+			input.b = m_valueLUT[ input.b ];
+
+			return input;
+		}
+}
 }
