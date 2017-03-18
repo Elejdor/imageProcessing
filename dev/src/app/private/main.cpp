@@ -5,45 +5,32 @@
 #include "../../rendering/public/image.h"
 
 #include <stdio.h>
+#include "imageProcessor.h"
+#include "simpleImageEffects.h"
 
-struct Pixel
+
+void Test1( rendering::Renderer* renderer )
 {
-	union 
-	{
-		Uint8 arr[ 3 ];
-		struct
-		{
-			Uint8 r, g, b;
-		};
-	};
+	gf::Image* iss = new gf::Image();
+	if ( iss->GetData() == nullptr )
+		iss->Load( "iss.jpeg" );
 
-};
+	gf::Image* grey = iss->GenerateGreyscale();
 
-void IterateImage( void( *func )( Pixel& pixel ), Image& img )
-{
-	const Uint32 len = img.GetSize();
-	for ( Uint32 i = 0; i < len; ++i )
-	{
-		void* dataPtr = img.GetData() + sizeof( Pixel ) * i;
-		Pixel* px = static_cast< Pixel* >( dataPtr );
-		func( *px );
-	}
-}
+	gf::ImageProcessor brightener;
+	brightener.SetImage( grey );
 
-void IncreaseBrightness( Pixel& px )
-{
-	const Uint8 amount = 80;
-	for ( Uint8 i = 0; i < 3; ++i )
-	{
-		if ( 255 - px.arr[ i ] > amount )
-		{
-			px.arr[ i ] += amount;
-		}
-		else
-		{
-			px.arr[ i ] = 255;
-		}
-	}
+	gf::effects::ChangeBrightness pass0;
+	pass0.SetBrightness( -100 );
+	brightener.AddPass( &pass0 );
+	brightener.ProcessImage( true );
+	
+	gf::Image renderImg;
+	renderImg.SetImageData( *brightener.GetOutput(), true );
+	renderer->SetImage( &renderImg );
+
+	delete grey;
+	delete iss;
 }
 
 int main( int, char** )
@@ -51,13 +38,7 @@ int main( int, char** )
 	rendering::Renderer renderer;
 	renderer.Init();
 
-	Image iss;
-	if ( iss.GetData() == nullptr )
-		iss.Load( "iss.jpeg" );
-
-	IterateImage( IncreaseBrightness, iss );
-
-	renderer.SetImage( &iss );
+	Test1( &renderer );
 
 	// Main loop
 	while ( renderer.Render() );

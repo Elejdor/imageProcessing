@@ -5,7 +5,11 @@
 
 class GfViewport;
 class ImageRenderer;
-class Image;
+
+namespace gf
+{
+	class Image;
+}
 
 namespace rendering
 {
@@ -18,7 +22,7 @@ namespace rendering
 		Bool Init();
 
 		Bool Render();
-		void SetImage( const Image* const img );
+		void SetImage( const gf::Image* const img );
 
 	private:
 		void InitResources();

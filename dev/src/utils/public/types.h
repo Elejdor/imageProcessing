@@ -18,3 +18,16 @@ typedef float Float;
 typedef double Double;
 
 typedef bool Bool;
+
+struct Color3
+{
+	union
+	{
+		struct
+		{
+			Uint8 r, g, b;
+		};
+
+		Uint8 arr[ 3 ];
+	};
+};

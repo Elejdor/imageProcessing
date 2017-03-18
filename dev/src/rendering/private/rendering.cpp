@@ -172,7 +172,7 @@ namespace rendering
 		ImGui_ImplGlfwGL3_Init( window, true );
 	}
 
-	void Renderer::SetImage( const Image* const img )
+	void Renderer::SetImage( const gf::Image* const img )
 	{
 		SC_ASSERT( m_image, "Image renderer not initialized" );
 		m_image->SetImage( img );

@@ -73,7 +73,7 @@ void ImageRenderer::Draw()
 	glDisableVertexAttribArray( 0 );
 }
 
-void ImageRenderer::SetImage( const Image * const img )
+void ImageRenderer::SetImage( const gf::Image * const img )
 {
 	m_img = img;
 

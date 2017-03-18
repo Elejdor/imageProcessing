@@ -1,25 +1,36 @@
 #pragma once
 
-class Image
+namespace gf
 {
-public:
-	Image();
-	~Image();
+	class Image
+	{
+	public:
+		Image();
+		Image( const Image& other, Bool forceRGB = true );
 
-	void Load( const char* fileName );
-	void Save( const char* fileName );
+		~Image();
 
-	Uint8* GetData() const { return m_data; }
-	Uint32 GetDataSize() const { return 3 * m_size; }
-	Uint32 GetSize() const { return m_size; }
+		void Load( const char* fileName );
+		void Save( const char* fileName );
 
-	Uint32 GetWidth() const { return m_width; }
-	Uint32 GetHeight() const { return m_height; }
+		void SetData( void* data, Uint32 size );
+		void SetImageData( const Image& src, Bool forceRGB = true );
+		void* GetData() const { return m_data; }
+		Uint32 GetDataSize() const { return m_channels * m_size; }
+		Uint32 GetSize() const { return m_size; }
 
-private:
-	Uint32 m_width;
-	Uint32 m_height;
-	Uint32 m_size;
+		Uint32 GetWidth() const { return m_width; }
+		Uint32 GetHeight() const { return m_height; }
 
-	Uint8* m_data;
-};
+		Image* GenerateGreyscale() const;
+		Uint32 GetChannels() const { return m_channels; }
+
+	private:
+		Uint8* m_data;
+
+		Uint32 m_width;
+		Uint32 m_height;
+		Uint32 m_size;
+		Uint32 m_channels;
+	};
+}
