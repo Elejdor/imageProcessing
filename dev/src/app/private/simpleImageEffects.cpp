@@ -120,6 +120,7 @@ namespace gf
 
 		Color3 ChangeBrightness::Process( Color3 input )
 		{
+			SC_ASSERT( false, "Not implemented" );
 			return Color3();
 		}
 
@@ -148,6 +149,61 @@ namespace gf
 			input.b = m_valueLUT[ input.b ];
 
 			return input;
+		}
+
+		//////////////////////////////////////////////////////////////////////////
+		// CalcRange
+		//////////////////////////////////////////////////////////////////////////
+		Bool CalcRange::OnStarted( ImageProcessor * proc )
+		{
+			m_min = 0xff;
+			m_max = 0;
+			return true;
+		}
+
+		Uint8 CalcRange::Process( Uint8 input )
+		{
+			if ( input < m_min )
+				m_min = input;
+			else if ( m_max < input )
+				m_max = input;
+
+			return input;
+		}
+
+		Color3 CalcRange::Process( Color3 input )
+		{
+			SC_ASSERT( false, "Not implemented" );
+			return Color3();
+		}
+
+		//////////////////////////////////////////////////////////////////////////
+		// Normalize
+		//////////////////////////////////////////////////////////////////////////
+		Bool Normalize::OnStarted( ImageProcessor * proc )
+		{
+			const Uint8 min = m_range->GetMin();
+			const Uint8 max = m_range->GetMax();
+
+			const float rel = ( float )( m_newMax - m_newMin ) / ( max - min );
+
+			for ( Uint16 i = 0; i < 256; ++i )
+			{
+				m_valueLUT[ i ] = ( Uint8 )( rel * ( i - min ) + m_newMin );
+			}
+
+			return true;
+		}
+
+		Uint8 Normalize::Process( Uint8 input )
+		{
+			return m_valueLUT[ input ];
+		}
+
+		Color3 Normalize::Process( Color3 input )
+		{
+			SC_ASSERT( false, "Not implemented" );
+			return Color3();
 		}
 }
 }

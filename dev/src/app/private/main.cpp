@@ -27,16 +27,24 @@ void Test1( rendering::Renderer* renderer )
 
 	// contrast pass
 	gf::effects::CalculateAvg avgPass;
-	imageEffect.AddPass( &avgPass );
-
 	gf::effects::ChangeContrast contrastPass;
 	contrastPass.SetAvg( &avgPass );
 	contrastPass.SetContrast( 10 );
-	imageEffect.AddPass( &contrastPass );
+	//imageEffect.AddPass( &avgPass );
+	//imageEffect.AddPass( &contrastPass );
 
 	// negate
 	gf::effects::Negate negatePass;
-	imageEffect.AddPass( &negatePass );
+	//imageEffect.AddPass( &negatePass );
+
+	// normalize
+	gf::effects::Normalize normalizePass;
+	gf::effects::CalcRange range;
+	normalizePass.SetRange( &range );
+	normalizePass.SetNewRange( 0, 100 );
+
+	imageEffect.AddPass( &range );
+	imageEffect.AddPass( &normalizePass );
 
 	imageEffect.ProcessImage( true );
 	

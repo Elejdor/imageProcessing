@@ -70,5 +70,41 @@ namespace gf
 		private:
 			Uint8  m_valueLUT[ 256 ];
 		};
+
+		class CalcRange : public gf::IProcessingPass
+		{
+		public:
+			virtual Bool OnStarted( ImageProcessor* proc ) override;
+
+			virtual Uint8 Process( Uint8 input ) override;
+			virtual Color3 Process( Color3 input ) override;
+			
+			Uint8 GetMin() const { return m_min; }
+			Uint8 GetMax() const { return m_max; }
+
+		private:
+			Uint8 m_min;
+			Uint8 m_max;
+		};
+
+		class Normalize : public gf::IProcessingPass
+		{
+		public:
+			virtual Bool OnStarted( ImageProcessor* proc ) override;
+
+			virtual Uint8 Process( Uint8 input ) override;
+			virtual Color3 Process( Color3 input ) override;
+
+			void SetNewRange( Uint8 min, Uint8 max ) { m_newMin = min; m_newMax = max; }
+			void SetRange( const CalcRange* range ) { m_range = range; }
+
+		private:
+			const CalcRange*	m_range;
+
+			Uint8				m_newMin;
+			Uint8				m_newMax;
+
+			Uint8				m_valueLUT[ 256 ];
+		};
 	}
 }
