@@ -7,9 +7,35 @@ namespace gf
 {
 	namespace effects
 	{
+		namespace helper
+		{
+			Uint8 AddVal( Int16 val, Int16 add )
+			{
+				if ( add < 0 )
+				{
+					if ( val < ( -add ) )
+						return 0;
+				}
+				else if ( add > 0 )
+				{
+					if ( 255 - val < add )
+						return 255;
+				}
+
+				return val + add;
+			}
+		}
+
 		//////////////////////////////////////////////////////////////////////////
 		// CalculateAvg
 		//////////////////////////////////////////////////////////////////////////
+		CalculateAvg::CalculateAvg()
+			: m_calculated( false )
+			, m_bake( true )
+			, m_result( 0 )
+		{
+		}
+
 		Bool CalculateAvg::OnStarted( ImageProcessor* processor )
 		{
 			if ( m_bake && m_calculated )
@@ -39,39 +65,51 @@ namespace gf
 		}
 
 		//////////////////////////////////////////////////////////////////////////
+		// ChangeContrast
+		//////////////////////////////////////////////////////////////////////////
+		Bool ChangeContrast::OnStarted( gf::ImageProcessor * proc )
+		{
+			const Uint8 avg = m_avg->GetResult();
+			for ( Uint16 i = 0; i < 256; ++i )
+			{
+				if ( i < avg )
+				{
+					m_valueLUT[ i ] = helper::AddVal( i, -m_contrast );
+				}
+				else if ( avg < i )
+				{
+					m_valueLUT[ i ] = helper::AddVal( i, m_contrast );
+				}
+				else
+				{
+					m_valueLUT[ i ] = ( Uint8 )i;
+				}
+			}
+
+			return true;
+		}
+
+		Uint8 ChangeContrast::Process( Uint8 input )
+		{
+			return m_valueLUT[ input ];
+		}
+
+		Color3 ChangeContrast::Process( Color3 input )
+		{
+			SC_ASSERT( false, "Not implemented" );
+			return Color3();
+		}
+
+		//////////////////////////////////////////////////////////////////////////
 		// ChangeBrightness
 		//////////////////////////////////////////////////////////////////////////
 		Bool ChangeBrightness::OnStarted( ImageProcessor * proc )
 		{
-			Uint8 val = 0;
-			if ( m_brightness > 0 )
+			for ( Uint16 i = 0; i < 256; ++i )
 			{
-				for ( Uint16 i = 0; i < 256; ++i )
-				{
-					val = ( Uint8 )i;
-					if ( ( 255 - val ) < m_brightness )
-						m_valueLUT[ i ] = 255;
-					else
-						m_valueLUT[ i ] = val + m_brightness;
-				}
+				m_valueLUT[ i ] = helper::AddVal( i, m_brightness );
 			}
-			else if ( m_brightness < 0 )
-			{
-				for ( Uint16 i = 0; i < 256; ++i )
-				{
-					val = ( Uint8 )i;
-					if ( val < ( -m_brightness ) )
-						m_valueLUT[ i ] = 0;
-					else
-						m_valueLUT[ i ] = val + m_brightness;
-				}
-			}
-			else
-			{
-				for ( Uint16 i = 0; i < 256; ++i )
-					m_valueLUT[ i ] = ( Uint8 )i;
-			}
-			
+
 			return true;
 		}
 

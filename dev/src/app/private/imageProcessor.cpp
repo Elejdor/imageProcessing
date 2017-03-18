@@ -33,7 +33,11 @@ namespace gf
 		for ( IProcessingPass* pass : m_passes )
 		{
 			if ( !pass->OnStarted( this ) )
+			{
+				pass->OnFinished( this );
+				++m_currentPass;
 				continue;
+			}
 
 			if ( m_src->GetChannels() == 1 )
 			{

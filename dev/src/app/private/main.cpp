@@ -8,7 +8,6 @@
 #include "imageProcessor.h"
 #include "simpleImageEffects.h"
 
-
 void Test1( rendering::Renderer* renderer )
 {
 	gf::Image* iss = new gf::Image();
@@ -17,16 +16,28 @@ void Test1( rendering::Renderer* renderer )
 
 	gf::Image* grey = iss->GenerateGreyscale();
 
-	gf::ImageProcessor brightener;
-	brightener.SetImage( grey );
 
+	gf::ImageProcessor imageEffect;
+	imageEffect.SetImage( grey );
+
+	// brightness pass
 	gf::effects::ChangeBrightness pass0;
-	pass0.SetBrightness( -100 );
-	brightener.AddPass( &pass0 );
-	brightener.ProcessImage( true );
+	pass0.SetBrightness( 0 );
+	imageEffect.AddPass( &pass0 );
+
+	// contrast pass
+	gf::effects::CalculateAvg avgPass;
+	imageEffect.AddPass( &avgPass );
+
+	gf::effects::ChangeContrast contrastPass;
+	contrastPass.SetAvg( &avgPass );
+	contrastPass.SetContrast( 10 );
+	imageEffect.AddPass( &contrastPass );
+
+	imageEffect.ProcessImage( true );
 	
 	gf::Image renderImg;
-	renderImg.SetImageData( *brightener.GetOutput(), true );
+	renderImg.SetImageData( *imageEffect.GetOutput(), true );
 	renderer->SetImage( &renderImg );
 
 	delete grey;
