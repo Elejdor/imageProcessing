@@ -16,11 +16,13 @@ namespace rendering
 		~Renderer();
 
 		Bool Init();
+
 		Bool Render();
-		void SetMainWindow( GfViewport* vp );
-		void SetImage( Image* img );
+		void SetImage( const Image* const img );
 
 	private:
+		void InitResources();
+		void SetMainWindow( GfViewport* vp );
 		void RenderImage();
 
 	private:

@@ -11,8 +11,11 @@ int main( int, char** )
 	rendering::Renderer renderer;
 	renderer.Init();
 
-	GfViewport vp;
-	renderer.SetMainWindow( &vp );
+	static Image iss;
+	if ( iss.GetData() == nullptr )
+		iss.Load( "iss.jpeg" );
+
+	renderer.SetImage( &iss );
 
 	// Main loop
 	while ( renderer.Render() );

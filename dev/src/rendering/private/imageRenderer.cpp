@@ -11,6 +11,9 @@ ImageRenderer::ImageRenderer()
 
 void ImageRenderer::Draw()
 {
+	if ( !m_img )
+		return;
+
 	glBindVertexArray( m_vb );
 
 	static const GLfloat g_vertex_buffer_data[] = {

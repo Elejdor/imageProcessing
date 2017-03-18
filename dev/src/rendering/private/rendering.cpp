@@ -50,11 +50,15 @@ namespace rendering
 
 	Renderer::Renderer()
 		: m_viewport( nullptr )
+		, m_image( nullptr )
 	{
 	}
 	
 	Renderer::~Renderer()
 	{
+		delete m_image;
+		delete m_viewport;
+
 		ImGui_ImplGlfwGL3_Shutdown();
 		glfwTerminate();
 	}
@@ -70,7 +74,38 @@ namespace rendering
 		glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 3 );
 		glfwWindowHint( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE );
 
+		InitResources();
+
 		return true;
+	}
+
+	void Renderer::InitResources()
+	{
+		SetMainWindow( new GfViewport() );
+
+		// create shader for image
+		g_imageShader = glCreateProgram();
+		GLint vShader = glCreateShader( GL_VERTEX_SHADER );
+		GLint fShader = glCreateShader( GL_FRAGMENT_SHADER );
+
+		glShaderSource( vShader, 1, &shaders::vsTexture, 0 );
+		glShaderSource( fShader, 1, &shaders::fsTexture, 0 );
+
+		glCompileShader( vShader );
+		glCompileShader( fShader );
+
+		glAttachShader( g_imageShader, vShader );
+		glAttachShader( g_imageShader, fShader );
+
+		glLinkProgram( g_imageShader );
+
+		GLint n = 0;
+		glGetProgramiv( g_imageShader, GL_ACTIVE_UNIFORMS, &n );
+
+		g_texAttrib = glGetUniformLocation( g_imageShader, "texSampler" );
+		//g_mvpAttrib = glGetUniformLocation( g_imageShader, "MVP" );
+
+		m_image = new ImageRenderer();
 	}
 
 	Bool Renderer::Render()
@@ -78,37 +113,6 @@ namespace rendering
 		bool show_test_window = true;
 		bool show_another_window = true;
 		const ImVec4 clear_color = ImColor( 114, 144, 154 );
-
-		static bool glProgramCreated = false;
-		if ( !glProgramCreated )
-		{
-			// create shader for image
-			g_imageShader = glCreateProgram();
-			GLint vShader = glCreateShader( GL_VERTEX_SHADER );
-			GLint fShader = glCreateShader( GL_FRAGMENT_SHADER );
-
-			glShaderSource( vShader, 1, &shaders::vsTexture, 0 );
-			glShaderSource( fShader, 1, &shaders::fsTexture, 0 );
-
-			glCompileShader( vShader );
-			glCompileShader( fShader );
-
-			glAttachShader( g_imageShader, vShader );
-			glAttachShader( g_imageShader, fShader );
-
-			glLinkProgram( g_imageShader );
-
-			GLint n = 0;
-			glGetProgramiv( g_imageShader, GL_ACTIVE_UNIFORMS, &n );
-
-			g_texAttrib = glGetUniformLocation( g_imageShader, "texSampler" );
-			//g_mvpAttrib = glGetUniformLocation( g_imageShader, "MVP" );
-
-			glProgramCreated = true;
-		}
-		// image test
-
-
 
 		ImGui_ImplGlfwGL3_NewFrame();
 
@@ -145,15 +149,7 @@ namespace rendering
 		glClearColor( clear_color.x, clear_color.y, clear_color.z, clear_color.w );
 		glClear( GL_COLOR_BUFFER_BIT );
 
-		static Image iss;
-		if ( iss.GetData() == nullptr )
-			iss.Load( "iss.jpeg" );
-
-		glUseProgram( g_imageShader );
-		ImageRenderer rend;
-		rend.SetImage( &iss );
-		rend.Draw();
-
+		RenderImage();
 		ImGui::Render();
 
 		glfwSwapBuffers( m_viewport->GetWindow() );
@@ -176,16 +172,16 @@ namespace rendering
 		ImGui_ImplGlfwGL3_Init( window, true );
 	}
 
-	void Renderer::SetImage( Image* img )
+	void Renderer::SetImage( const Image* const img )
 	{
+		SC_ASSERT( m_image, "Image renderer not initialized" );
 		m_image->SetImage( img );
 	}
 
 	void Renderer::RenderImage()
 	{
-		if ( m_image )
-		{
-
-		}
+		SC_ASSERT( m_image, "Image rendere does not exist" );
+		glUseProgram( g_imageShader );
+		m_image->Draw();
 	}
 }
