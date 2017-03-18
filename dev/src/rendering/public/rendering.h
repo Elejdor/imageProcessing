@@ -4,6 +4,7 @@
 #include <vector>
 
 class GfViewport;
+class ImageRenderer;
 class Image;
 
 namespace rendering
@@ -25,6 +26,6 @@ namespace rendering
 	private:
 		std::vector< GfViewport* >	m_viewports;
 		GfViewport*					m_viewport;
-		Image*						m_image;
+		ImageRenderer*				m_image;
 	};
 }

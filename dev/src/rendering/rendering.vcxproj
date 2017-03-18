@@ -81,12 +81,14 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="private\image.cpp" />
+    <ClCompile Include="private\imageRenderer.cpp" />
     <ClCompile Include="private\imguiFunctions.cpp" />
     <ClCompile Include="private\rendering.cpp" />
     <ClCompile Include="private\gfViewport.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="private\build.h" />
+    <ClInclude Include="private\imageRenderer.h" />
     <ClInclude Include="private\shaderData.h" />
     <ClInclude Include="private\stb_image.h" />
     <ClInclude Include="private\stb_image_write.h" />

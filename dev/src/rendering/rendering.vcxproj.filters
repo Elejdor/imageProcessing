@@ -6,6 +6,7 @@
     <ClCompile Include="private\gfViewport.cpp" />
     <ClCompile Include="private\rendering.cpp" />
     <ClCompile Include="private\image.cpp" />
+    <ClCompile Include="private\imageRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="private\build.h" />
@@ -16,5 +17,6 @@
     <ClInclude Include="private\stb_image.h" />
     <ClInclude Include="private\stb_image_write.h" />
     <ClInclude Include="public\image.h" />
+    <ClInclude Include="private\imageRenderer.h" />
   </ItemGroup>
 </Project>
