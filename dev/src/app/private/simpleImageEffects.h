@@ -106,5 +106,37 @@ namespace gf
 
 			Uint8				m_valueLUT[ 256 ];
 		};
+
+		class LowPassFilter : public gf::IProcessingPass
+		{
+		public:
+			virtual Bool OnStarted( ImageProcessor* proc ) override;
+
+			virtual Uint8 Process( Uint8 input ) override;
+			virtual Color3 Process( Color3 input ) override;
+
+			void SetThreshold( Uint8 val ) { m_threshold = val; }
+
+		private:
+			const CalcRange*	m_range;
+			Uint8				m_threshold;
+			Uint8				m_valueLUT[ 256 ];
+		};
+
+		class HighPassFilter : public gf::IProcessingPass
+		{
+		public:
+			virtual Bool OnStarted( ImageProcessor* proc ) override;
+
+			virtual Uint8 Process( Uint8 input ) override;
+			virtual Color3 Process( Color3 input ) override;
+
+			void SetThreshold( Uint8 val ) { m_threshold = val; }
+
+		private:
+			const CalcRange*	m_range;
+			Uint8				m_threshold;
+			Uint8				m_valueLUT[ 256 ];
+		};
 	}
 }

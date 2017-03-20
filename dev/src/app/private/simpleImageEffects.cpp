@@ -205,5 +205,53 @@ namespace gf
 			SC_ASSERT( false, "Not implemented" );
 			return Color3();
 		}
-}
+		
+		// LowPassFilter
+		Bool LowPassFilter::OnStarted( ImageProcessor* proc )
+		{
+			for ( Uint16 i = 0; i < 256; ++i )
+			{
+				if ( i < m_threshold )
+					i = i;
+				else
+					i = 0;
+			}
+			return true;
+		}
+
+		Uint8 LowPassFilter::Process( Uint8 input )
+		{
+			return m_valueLUT[ input ];
+		}
+
+		Color3 LowPassFilter::Process( Color3 input )
+		{
+			SC_ASSERT( false, "Not implemented" );
+			return Color3();
+		}
+
+		// HighPassFilter
+		Bool HighPassFilter::OnStarted( ImageProcessor* proc )
+		{
+			for ( Uint16 i = 0; i < 256; ++i )
+			{
+				if ( i > m_threshold )
+					i = i;
+				else
+					i = 0;
+			}
+			return true;
+		}
+
+		Uint8 HighPassFilter::Process( Uint8 input )
+		{
+			return m_valueLUT[ input ];
+		}
+
+		Color3 HighPassFilter::Process( Color3 input )
+		{
+			SC_ASSERT( false, "Not implemented" );
+			return Color3();
+		}
+	}
 }
