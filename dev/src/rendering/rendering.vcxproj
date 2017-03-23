@@ -92,6 +92,7 @@
     <ClInclude Include="private\shaderData.h" />
     <ClInclude Include="private\stb_image.h" />
     <ClInclude Include="private\stb_image_write.h" />
+    <ClInclude Include="public\drawable.h" />
     <ClInclude Include="public\gfViewport.h" />
     <ClInclude Include="private\imguiFunctions.h" />
     <ClInclude Include="public\image.h" />

@@ -18,5 +18,6 @@
     <ClInclude Include="private\stb_image_write.h" />
     <ClInclude Include="public\image.h" />
     <ClInclude Include="private\imageRenderer.h" />
+    <ClInclude Include="public\drawable.h" />
   </ItemGroup>
 </Project>

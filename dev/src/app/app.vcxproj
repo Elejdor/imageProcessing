@@ -70,12 +70,14 @@
     <ClCompile Include="private\build.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="private\gui.cpp" />
     <ClCompile Include="private\imageProcessor.cpp" />
     <ClCompile Include="private\main.cpp" />
     <ClCompile Include="private\simpleImageEffects.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="private\build.h" />
+    <ClInclude Include="private\gui.h" />
     <ClInclude Include="private\imageProcessor.h" />
     <ClInclude Include="private\processingPass.h" />
     <ClInclude Include="private\simpleImageEffects.h" />

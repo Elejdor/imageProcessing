@@ -5,11 +5,13 @@
     <ClCompile Include="private\main.cpp" />
     <ClCompile Include="private\imageProcessor.cpp" />
     <ClCompile Include="private\simpleImageEffects.cpp" />
+    <ClCompile Include="private\gui.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="private\build.h" />
     <ClInclude Include="private\imageProcessor.h" />
     <ClInclude Include="private\processingPass.h" />
     <ClInclude Include="private\simpleImageEffects.h" />
+    <ClInclude Include="private\gui.h" />
   </ItemGroup>
 </Project>

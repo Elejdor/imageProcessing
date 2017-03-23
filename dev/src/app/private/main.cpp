@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include "imageProcessor.h"
 #include "simpleImageEffects.h"
+#include "gui.h"
 
 void Test1( rendering::Renderer* renderer )
 {
@@ -60,7 +61,9 @@ int main( int, char** )
 {
 	rendering::Renderer renderer;
 	renderer.Init();
-
+	
+	gf::GuiDrawer gui;
+	renderer.SetGui( &gui );
 	Test1( &renderer );
 
 	// Main loop
