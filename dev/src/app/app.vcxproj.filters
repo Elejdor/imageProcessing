@@ -6,6 +6,7 @@
     <ClCompile Include="private\imageProcessor.cpp" />
     <ClCompile Include="private\simpleImageEffects.cpp" />
     <ClCompile Include="private\gui.cpp" />
+    <ClCompile Include="private\postProcessGui.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="private\build.h" />
@@ -13,5 +14,6 @@
     <ClInclude Include="private\processingPass.h" />
     <ClInclude Include="private\simpleImageEffects.h" />
     <ClInclude Include="private\gui.h" />
+    <ClInclude Include="private\postProcessGui.h" />
   </ItemGroup>
 </Project>

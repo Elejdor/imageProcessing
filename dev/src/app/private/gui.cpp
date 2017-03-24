@@ -1,14 +1,42 @@
 #include "build.h"
 #include "gui.h"
+
 #include "../../../external/imgui/include/imgui.h"
+#include "../../rendering/public/image.h"
+
+#include "imageProcessor.h"
+#include "processingPass.h"
+
+#include <memory>
 
 namespace gf
 {
+	class SimpleEffectsWnd : public PostProcessWindow
+	{
+	public:
+		// Inherited via PostProcessWindow
+		virtual void Draw() override
+		{
+			ImGui::Begin( "Simple effects" );
+			this->DrawDefault();
+			ImGui::End();
+		}
+
+	};
+
+	GuiDrawer::GuiDrawer()
+	{
+		m_simpleEffects = new SimpleEffectsWnd();
+	}
+
 	void GuiDrawer::Draw()
 	{
 		bool show_test_window = true;
 		bool show_another_window = true;
 		const ImVec4 clear_color = ImColor( 114, 144, 154 );
+
+		if ( m_simpleEffects )
+			m_simpleEffects->Draw();
 
 		// 1. Show a simple window
 		// Tip: if we don't call ImGui::Begin()/ImGui::End() the widgets appears in a window automatically called "Debug"
@@ -35,5 +63,7 @@ namespace gf
 			ImGui::SetNextWindowPos( ImVec2( 650, 20 ), ImGuiSetCond_FirstUseEver );
 			ImGui::ShowTestWindow( &show_test_window );
 		}
+
 	}
+
 }
