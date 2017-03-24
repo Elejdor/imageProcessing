@@ -1,6 +1,6 @@
 #pragma once
-
 #include <GL/gl3w.h>
+#include <memory>
 
 namespace gf
 {
@@ -16,10 +16,6 @@ public:
 	void SetImage( const gf::Image* const img );
 
 private:
-	void CreateBuffers();
-
-private:
-	const gf::Image*	m_img;
 	GLuint				m_ib;
 	GLuint				m_vb;
 	GLuint				m_textureBinding;

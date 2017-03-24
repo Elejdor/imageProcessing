@@ -9,65 +9,35 @@
 #include "simpleImageEffects.h"
 #include "gui.h"
 
-void Test1( rendering::Renderer* renderer )
+gf::GuiDrawer gui;
+
+typedef std::unique_ptr< gf::Image > ImageUniquePtr;
+typedef std::shared_ptr< gf::Image > ImagePtr;
+
+rendering::Renderer g_renderer;
+
+void SetMainImage( gf::Image* img )
 {
-	gf::Image* iss = new gf::Image();
-	if ( iss->GetData() == nullptr )
-		iss->Load( "iss.jpeg" );
-
-	gf::Image* grey = iss->GenerateGreyscale();
-
-
-	gf::ImageProcessor imageEffect;
-	imageEffect.SetImage( grey );
-
-	// brightness pass
-	gf::effects::ChangeBrightness pass0;
-	pass0.SetBrightness( 0 );
-	imageEffect.AddPass( &pass0 );
-
-	// contrast pass
-	gf::effects::CalculateAvg avgPass;
-	gf::effects::ChangeContrast contrastPass;
-	contrastPass.SetAvg( &avgPass );
-	contrastPass.SetContrast( 10 );
-	//imageEffect.AddPass( &avgPass );
-	//imageEffect.AddPass( &contrastPass );
-
-	// negate
-	gf::effects::Negate negatePass;
-	//imageEffect.AddPass( &negatePass );
-
-	// normalize
-	gf::effects::Normalize normalizePass;
-	gf::effects::CalcRange range;
-	normalizePass.SetRange( &range );
-	normalizePass.SetNewRange( 0, 100 );
-
-	imageEffect.AddPass( &range );
-	imageEffect.AddPass( &normalizePass );
-
-	imageEffect.ProcessImage( true );
-	
-	gf::Image renderImg;
-	renderImg.SetImageData( *imageEffect.GetOutput(), true );
-	renderer->SetImage( &renderImg );
-
-	delete grey;
-	delete iss;
+	g_renderer.SetImage( img );
 }
 
 int main( int, char** )
 {
-	rendering::Renderer renderer;
-	renderer.Init();
+	g_renderer.Init();
 	
-	gf::GuiDrawer gui;
-	renderer.SetGui( &gui );
-	Test1( &renderer );
+	ImageUniquePtr iss( new gf::Image() );
 
-	// Main loop
-	while ( renderer.Render() );
+	if ( iss->GetData() == nullptr )
+		iss->Load( "iss.jpeg" );
+
+	g_renderer.SetImage( iss->GenerateGreyscale() );
+
+	ImagePtr grey( iss->GenerateGreyscale() );
+
+	gui.SetImage( grey.get() );
+	g_renderer.SetGui( &gui );
+
+	while ( g_renderer.Render() );
 
 	return 0;
 }

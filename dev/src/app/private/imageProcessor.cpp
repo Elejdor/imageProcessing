@@ -30,6 +30,8 @@ namespace gf
 
 	void ImageProcessor::ProcessImage( Bool outputIsSource )
 	{
+		SC_ASSERT( m_src, "No source image provided" );
+
 		for ( IProcessingPass* pass : m_passes )
 		{
 			if ( !pass->OnStarted( this ) )
@@ -44,7 +46,7 @@ namespace gf
 				if ( outputIsSource )
 				{
 					Uint8* dataPtr = static_cast< Uint8* >( m_output->GetData() );
-					IterateImage< Uint8 >( dataPtr, dataPtr, m_src->GetSize(), m_passes[ m_currentPass ] );
+					IterateImage< Uint8 >( dataPtr, dataPtr, m_output->GetSize(), m_passes[ m_currentPass ] );
 				}
 				else
 				{

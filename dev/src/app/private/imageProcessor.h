@@ -89,13 +89,13 @@ namespace gf
 		}
 
 	protected:
-		SurroundingInfo					m_surrounding;
-		const Image*					m_src;
-		Image*							m_output;
+		SurroundingInfo						m_surrounding;
+		const Image*						m_src;
+		Image*								m_output;
 
-		Point2							m_currentPos;
+		Point2								m_currentPos;
 
-		std::vector< IProcessingPass* >	m_passes;
-		Uint32							m_currentPass;
+		std::vector< IProcessingPass* >		m_passes;
+		Uint32								m_currentPass;
 	};
 }

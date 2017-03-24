@@ -3,7 +3,6 @@
 #include "image.h"
 
 ImageRenderer::ImageRenderer() 
-	: m_img( nullptr )
 {
 	glGenVertexArrays( 1, &m_vb );
 	glGenTextures( 1, &m_textureBinding );
@@ -11,9 +10,6 @@ ImageRenderer::ImageRenderer()
 
 void ImageRenderer::Draw()
 {
-	if ( !m_img )
-		return;
-
 	glBindVertexArray( m_vb );
 
 	static const GLfloat g_vertex_buffer_data[] = {
@@ -73,52 +69,12 @@ void ImageRenderer::Draw()
 	glDisableVertexAttribArray( 0 );
 }
 
-void ImageRenderer::SetImage( const gf::Image * const img )
+void ImageRenderer::SetImage( const gf::Image* const img )
 {
-	m_img = img;
-
 	glBindTexture( GL_TEXTURE_2D, m_textureBinding );
 
-	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, m_img->GetWidth(), m_img->GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, m_img->GetData() );
+	glTexImage2D( GL_TEXTURE_2D, 0, GL_R8, img->GetWidth(), img->GetHeight(), 0, GL_RED, GL_UNSIGNED_BYTE, img->GetData() );
 
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-}
-
-void ImageRenderer::CreateBuffers()
-{
-	if ( m_img )
-	{
-		// texture
-		glGenTextures( 1, &m_textureBinding );
-		glBindTexture( GL_TEXTURE_2D, m_textureBinding );
-		glTexImage2D( GL_TEXTURE_2D,
-					  0,
-					  GL_RGB,
-					  m_img->GetWidth(), m_img->GetHeight(),
-					  0,
-					  GL_BGR,
-					  GL_UNSIGNED_BYTE,
-					  m_img->GetData() );
-
-
-		// plane
-		const Uint32 indices[] = { 0, 1, 2, 0, 3, 1 };
-		const Float verts[] = {
-			1.0f, 1.0f, 0.0f,
-			1.0f, 0.0f, 0.0f,
-			0.0f, 0.0f, 0.0f,
-			1.0f, 1.0f, 0.0f
-		};
-
-
-		// create buffers
-		glGenBuffers( 1, &m_vb );
-		glBindBuffer( GL_ARRAY_BUFFER, m_vb );
-		glBufferData( GL_ARRAY_BUFFER, sizeof( verts ), verts, GL_STATIC_DRAW );
-
-		glGenBuffers( 1, &m_ib );
-		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_ib );
-		glBufferData( GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof( Uint32 ), indices, GL_STATIC_DRAW );
-	}
 }

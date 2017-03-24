@@ -35,7 +35,8 @@ namespace shaders
 		"uniform sampler2D texSampler;\n"
 		"void main()\n"
 		"{\n"
-		"	color = texture( texSampler, UV ).rgb;\n"
+		"   float value = texture( texSampler, UV ).x;\n"
+		"	color = vec3( value, value, value );\n"
 		"}\n";
 }
 

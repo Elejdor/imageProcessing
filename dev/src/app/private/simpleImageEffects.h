@@ -37,6 +37,8 @@ namespace gf
 			virtual Uint8 Process( Uint8 input ) override;
 			virtual Color3 Process( Color3 input ) override;
 
+			static const char* GetName() { return "SimpleContrast"; }
+
 		private:
 			const CalculateAvg*		m_avg;
 			Int16					m_contrast;
@@ -53,6 +55,8 @@ namespace gf
 
 			void SetBrightness( Int32 val ) { m_brightness = val; }
 
+			static const char* GetName() { return "Brightness"; }
+
 		private:
 			Uint8  m_valueLUT[ 256 ];
 			Int32  m_brightness;
@@ -66,6 +70,8 @@ namespace gf
 
 			virtual Uint8 Process( Uint8 input ) override;
 			virtual Color3 Process( Color3 input ) override;
+
+			static const char* GetName() { return "Negative"; }
 
 		private:
 			Uint8  m_valueLUT[ 256 ];
@@ -81,7 +87,7 @@ namespace gf
 			
 			Uint8 GetMin() const { return m_min; }
 			Uint8 GetMax() const { return m_max; }
-
+			
 		private:
 			Uint8 m_min;
 			Uint8 m_max;
@@ -97,6 +103,8 @@ namespace gf
 
 			void SetNewRange( Uint8 min, Uint8 max ) { m_newMin = min; m_newMax = max; }
 			void SetRange( const CalcRange* range ) { m_range = range; }
+
+			static const char* GetName() { return "Normalize"; }
 
 		private:
 			const CalcRange*	m_range;
@@ -117,6 +125,8 @@ namespace gf
 
 			void SetThreshold( Uint8 val ) { m_threshold = val; }
 
+			static const char* GetName() { return "Low-pass Filter"; }
+
 		private:
 			const CalcRange*	m_range;
 			Uint8				m_threshold;
@@ -132,6 +142,8 @@ namespace gf
 			virtual Color3 Process( Color3 input ) override;
 
 			void SetThreshold( Uint8 val ) { m_threshold = val; }
+
+			static const char* GetName() { return "High-pass Filter"; }
 
 		private:
 			const CalcRange*	m_range;
