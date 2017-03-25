@@ -7,6 +7,9 @@ namespace gf
 
 	namespace effects
 	{
+		//////////////////////////////////////////////////////////////////////////
+		// CalculateAvg
+		//////////////////////////////////////////////////////////////////////////
 		class CalculateAvg : public gf::IProcessingPass
 		{
 		public:
@@ -26,25 +29,35 @@ namespace gf
 			Bool	m_bake;
 		};
 
+		//////////////////////////////////////////////////////////////////////////
+		// ChangeContrast 
+		//////////////////////////////////////////////////////////////////////////
 		class ChangeContrast : public gf::IProcessingPass
 		{
 		public:
+			ChangeContrast();
+			~ChangeContrast();
+
 			virtual Bool OnStarted( gf::ImageProcessor* proc ) override;
 
-			void SetAvg( const CalculateAvg* avg ) { m_avg = avg; }
 			void SetContrast( Int16 val ) { m_contrast = val; }
 
 			virtual Uint8 Process( Uint8 input ) override;
 			virtual Color3 Process( Color3 input ) override;
 
+			void OnEffectRegistered( ImageProcessor* proc ) override;
+
 			static const char* GetName() { return "SimpleContrast"; }
 
 		private:
-			const CalculateAvg*		m_avg;
+			CalculateAvg*			m_avg;
 			Int16					m_contrast;
 			Uint8					m_valueLUT[ 255 ];
 		};
 
+		//////////////////////////////////////////////////////////////////////////
+		// ChangeBrightness 
+		//////////////////////////////////////////////////////////////////////////
 		class ChangeBrightness : public gf::IProcessingPass
 		{
 		public:
@@ -61,8 +74,10 @@ namespace gf
 			Uint8  m_valueLUT[ 256 ];
 			Int32  m_brightness;
 		};
-
-
+		
+		//////////////////////////////////////////////////////////////////////////
+		// Negate
+		//////////////////////////////////////////////////////////////////////////
 		class Negate : public gf::IProcessingPass
 		{
 		public:
@@ -76,7 +91,10 @@ namespace gf
 		private:
 			Uint8  m_valueLUT[ 256 ];
 		};
-
+		
+		//////////////////////////////////////////////////////////////////////////\
+		// CalcRange
+		//////////////////////////////////////////////////////////////////////////
 		class CalcRange : public gf::IProcessingPass
 		{
 		public:
@@ -89,25 +107,32 @@ namespace gf
 			Uint8 GetMax() const { return m_max; }
 			
 		private:
-			Uint8 m_min;
-			Uint8 m_max;
+			Uint8		m_min;
+			Uint8		m_max;
 		};
 
+		//////////////////////////////////////////////////////////////////////////
+		// Normalize
+		//////////////////////////////////////////////////////////////////////////
 		class Normalize : public gf::IProcessingPass
 		{
 		public:
+			Normalize();
+			~Normalize();
+
 			virtual Bool OnStarted( ImageProcessor* proc ) override;
 
 			virtual Uint8 Process( Uint8 input ) override;
 			virtual Color3 Process( Color3 input ) override;
 
 			void SetNewRange( Uint8 min, Uint8 max ) { m_newMin = min; m_newMax = max; }
-			void SetRange( const CalcRange* range ) { m_range = range; }
 
 			static const char* GetName() { return "Normalize"; }
 
+			void OnEffectRegistered( ImageProcessor* proc ) override;
+
 		private:
-			const CalcRange*	m_range;
+			CalcRange*			m_range;
 
 			Uint8				m_newMin;
 			Uint8				m_newMax;
@@ -115,6 +140,9 @@ namespace gf
 			Uint8				m_valueLUT[ 256 ];
 		};
 
+		//////////////////////////////////////////////////////////////////////////
+		// LowPassFilter
+		//////////////////////////////////////////////////////////////////////////
 		class LowPassFilter : public gf::IProcessingPass
 		{
 		public:
@@ -133,6 +161,9 @@ namespace gf
 			Uint8				m_valueLUT[ 256 ];
 		};
 
+		//////////////////////////////////////////////////////////////////////////
+		// HighPassFilter
+		//////////////////////////////////////////////////////////////////////////
 		class HighPassFilter : public gf::IProcessingPass
 		{
 		public:

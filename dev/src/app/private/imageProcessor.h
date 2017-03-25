@@ -6,28 +6,6 @@
 
 namespace gf
 {
-	struct Matrix33
-	{
-		union
-		{
-			struct
-			{
-				Uint8 m00, m10, m20;
-				Uint8 m01, m11, m21;
-				Uint8 m02, m12, m22;
-			};
-
-			Uint8 arr[ 9 ];
-		};
-
-	};
-
-	struct SurroundingInfo
-	{
-		Matrix33			values;
-		std::bitset< 9 >	mask;
-	};
-
 	class Image;
 	class IProcessingPass;
 
@@ -43,15 +21,15 @@ namespace gf
 		void SetImage( const Image* img );
 
 		void ProcessImage( Bool outputIsSource = false );
+		void FilterImage( Matrix33 filter );
 
 		virtual void OnProcessingEnd()
 		{ }
 
 		Image* GetOutput() const { return m_output; }
 
-		void AddPass( IProcessingPass* pass ) { m_passes.push_back( pass ); }
-
-		const SurroundingInfo& GetCurrentSurrounding();
+		void AddPass( IProcessingPass* pass );
+		Matrix33 SampleSurrounding( Uint32 x, Uint32 y ) const;
 
 	private:
 		template< typename PixelType >
@@ -89,7 +67,6 @@ namespace gf
 		}
 
 	protected:
-		SurroundingInfo						m_surrounding;
 		const Image*						m_src;
 		Image*								m_output;
 

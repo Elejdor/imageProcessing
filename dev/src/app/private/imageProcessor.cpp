@@ -5,6 +5,23 @@
 
 namespace gf
 {
+	namespace helper
+	{
+		Uint32 Combine( const Matrix33& a, const Matrix33& b )
+		{
+			Uint32 result = 0;
+			for ( Uint8 i = 0; i < 9; ++i )
+			{
+				result += a.arr[ i ] * b.arr[ i ];
+			}
+
+			return result;
+		}
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	// ImageProcessor
+	//////////////////////////////////////////////////////////////////////////
 	ImageProcessor::ImageProcessor()
 		: m_src( nullptr )
 		, m_output( nullptr )
@@ -14,6 +31,7 @@ namespace gf
 	ImageProcessor::~ImageProcessor()
 	{
 		delete m_output;
+		m_output = nullptr;
 	}
 
 	void ImageProcessor::SetImage( const Image* img )
@@ -85,56 +103,51 @@ namespace gf
 		m_currentPass = 0;
 	}
 
-	const SurroundingInfo& ImageProcessor::GetCurrentSurrounding()
+	void ImageProcessor::FilterImage( Matrix33 filter )
 	{
-		Point2 pos = m_currentPos - Point2( 1, 1 );
+		const Uint32 w = m_src->GetWidth() - 1;
+		const Uint32 h = m_src->GetHeight() - 1;
 
-		const Uint8* dataPtr = static_cast< Uint8* >( m_src->GetData() );
+		Uint8 filterSum = 0;
+		for ( Uint8 i = 0; i < 9; ++i )
+			filterSum += filter.arr[ i ];
 
-		Uint8 row = 0;
-		for ( Uint8 i = 0; i < 3; ++i )
+		Matrix33 currentPixels;
+		Uint32 pixelValue = 0;
+		for ( Uint32 i = 1; i < h; ++i )
 		{
-			if ( ( Uint32 )pos.x >= 0 && ( Uint32 )pos.x < m_src->GetWidth() )
+			for ( Uint32 j = 1; j < w; ++j )
 			{
-				if ( ( Uint32 )pos.y >= 0 && ( Uint32 )pos.x < m_src->GetHeight() )
-				{
-					const Uint8* const dataPtr = static_cast< Uint8* >( m_src->GetData() );
-					m_surrounding.values.arr[ i + row * 3 ] = dataPtr[ pos.x + pos.y * m_src->GetWidth() ];
-					m_surrounding.mask[ i + row * 3 ] = 1;
-				}
-				else
-				{
-					m_surrounding.mask[ i + row * 3 ] = 0;
-				}
-			}
-
-			++pos.x;
-			if ( i == 2 )
-			{
-				if ( row == 2 )
-					break;
-
-				++pos.y;
-				++row;
+				currentPixels = SampleSurrounding( j, i );
+				pixelValue = helper::Combine( filter, currentPixels ) / filterSum;
+				m_output->SetValue< Uint8 >( ( Uint8 )pixelValue, j, i );
 			}
 		}
-
-		return m_surrounding;
 	}
 
-	////////////////////////////////////////////////////////////////////////////
-	//// BrightnessProcessor
-	////////////////////////////////////////////////////////////////////////////
-	//Uint8 BrightnessProcessor::ProcessValues( Uint8 input )
-	//{
-	//	static const int inc = 50;
-	//	if ( 255 - input > inc )
-	//	{
-	//		return input + inc;
-	//	}
-	//	else
-	//	{
-	//		return 255;
-	//	}
-	//}
+	void ImageProcessor::AddPass( IProcessingPass* pass ) 
+	{
+		pass->OnEffectRegistered( this );
+		m_passes.push_back( pass ); 
+	}
+
+	Matrix33 ImageProcessor::SampleSurrounding( Uint32 x, Uint32 y ) const
+	{
+		Matrix33 result;
+		--y;
+		result.arr[ 0 ] = m_src->GetValue< Uint8 >( x - 1, y );
+		result.arr[ 1 ] = m_src->GetValue< Uint8 >( x, y );
+		result.arr[ 2 ] = m_src->GetValue< Uint8 >( x + 1, y );
+
+		++y;
+		result.arr[ 3 ] = m_src->GetValue< Uint8 >( x - 1, y );
+		result.arr[ 4 ] = m_src->GetValue< Uint8 >( x, y );
+		result.arr[ 5 ] = m_src->GetValue< Uint8 >( x + 1, y );
+
+		++y;
+		result.arr[ 6 ] = m_src->GetValue< Uint8 >( x - 1, y );
+		result.arr[ 7 ] = m_src->GetValue< Uint8 >( x, y );
+		result.arr[ 8 ] = m_src->GetValue< Uint8 >( x + 1, y );
+		return result;
+	}
 }

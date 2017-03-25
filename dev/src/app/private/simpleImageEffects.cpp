@@ -67,6 +67,16 @@ namespace gf
 		//////////////////////////////////////////////////////////////////////////
 		// ChangeContrast
 		//////////////////////////////////////////////////////////////////////////
+		ChangeContrast::ChangeContrast()
+			: m_avg( new CalculateAvg )
+		{ }
+
+		ChangeContrast::~ChangeContrast()
+		{
+			delete m_avg;
+			m_avg = nullptr;
+		}
+
 		Bool ChangeContrast::OnStarted( gf::ImageProcessor * proc )
 		{
 			const Uint8 avg = m_avg->GetResult();
@@ -98,6 +108,11 @@ namespace gf
 		{
 			SC_ASSERT( false, "Not implemented" );
 			return Color3();
+		}
+
+		void ChangeContrast::OnEffectRegistered( ImageProcessor* proc )
+		{
+			proc->AddPass( m_avg );			
 		}
 
 		//////////////////////////////////////////////////////////////////////////
@@ -180,6 +195,16 @@ namespace gf
 		//////////////////////////////////////////////////////////////////////////
 		// Normalize
 		//////////////////////////////////////////////////////////////////////////
+		Normalize::Normalize()
+			: m_range( new CalcRange() )
+		{ }
+
+		Normalize::~Normalize()
+		{
+			delete m_range;
+			m_range = nullptr;
+		}
+
 		Bool Normalize::OnStarted( ImageProcessor * proc )
 		{
 			const Uint8 min = m_range->GetMin();
@@ -205,8 +230,15 @@ namespace gf
 			SC_ASSERT( false, "Not implemented" );
 			return Color3();
 		}
-		
+
+		void Normalize::OnEffectRegistered( ImageProcessor * proc )
+		{
+			proc->AddPass( m_range );
+		}
+
+		//////////////////////////////////////////////////////////////////////////
 		// LowPassFilter
+		//////////////////////////////////////////////////////////////////////////
 		Bool LowPassFilter::OnStarted( ImageProcessor* proc )
 		{
 			for ( Uint16 i = 0; i < 256; ++i )

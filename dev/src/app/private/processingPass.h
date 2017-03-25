@@ -15,5 +15,6 @@ namespace gf
 
 		virtual Uint8 Process( Uint8 input ) = 0;
 		virtual Color3 Process( Color3 input ) = 0;
+		virtual void OnEffectRegistered( ImageProcessor* prc ) { }
 	};
 }

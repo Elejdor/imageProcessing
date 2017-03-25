@@ -31,3 +31,19 @@ struct Color3
 		Uint8 arr[ 3 ];
 	};
 };
+
+struct Matrix33
+{
+	union
+	{
+		struct
+		{
+			Uint8 m00, m10, m20;
+			Uint8 m01, m11, m21;
+			Uint8 m02, m12, m22;
+		};
+
+		Uint8 arr[ 9 ];
+	};
+
+};
