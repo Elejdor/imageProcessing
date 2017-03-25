@@ -144,6 +144,9 @@ namespace gf
 		//////////////////////////////////////////////////////////////////////////
 		Bool Negate::OnStarted( ImageProcessor * proc )
 		{
+			if ( !m_active )
+				return false;
+
 			for ( Uint16 i = 0; i < 255; ++i )
 			{
 				m_valueLUT[ i ] = 255 - i;

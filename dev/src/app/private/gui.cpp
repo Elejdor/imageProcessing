@@ -18,9 +18,7 @@ namespace gf
 		// Inherited via PostProcessWindow
 		virtual void Draw() override
 		{
-			ImGui::Begin( "Simple effects" );
 			this->DrawDefault();
-			ImGui::End();
 		}
 	};
 

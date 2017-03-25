@@ -81,15 +81,21 @@ namespace gf
 		class Negate : public gf::IProcessingPass
 		{
 		public:
+			Negate()
+				: m_active( true )
+			{ }
+
 			virtual Bool OnStarted( ImageProcessor* proc ) override;
 
 			virtual Uint8 Process( Uint8 input ) override;
 			virtual Color3 Process( Color3 input ) override;
 
-			static const char* GetName() { return "Negative"; }
+			static const char* GetName() { return "Negate"; }
+			inline void SetActive( Bool active ) { m_active = active; }
 
 		private:
-			Uint8  m_valueLUT[ 256 ];
+			Uint8	m_valueLUT[ 256 ];
+			Bool	m_active;
 		};
 		
 		//////////////////////////////////////////////////////////////////////////\

@@ -21,7 +21,7 @@ namespace gf
 		void SetImage( const Image* img );
 
 		void ProcessImage( Bool outputIsSource = false );
-		void FilterImage( Matrix33 filter );
+		void FilterImage( const FilterMatrix filter );
 
 		virtual void OnProcessingEnd()
 		{ }
@@ -29,7 +29,7 @@ namespace gf
 		Image* GetOutput() const { return m_output; }
 
 		void AddPass( IProcessingPass* pass );
-		Matrix33 SampleSurrounding( Uint32 x, Uint32 y ) const;
+		ColorMatrix SampleSurrounding( Uint32 x, Uint32 y ) const;
 
 	private:
 		template< typename PixelType >

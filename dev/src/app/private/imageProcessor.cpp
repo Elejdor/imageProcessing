@@ -7,13 +7,18 @@ namespace gf
 {
 	namespace helper
 	{
-		Uint32 Combine( const Matrix33& a, const Matrix33& b )
+		Int32 Combine( const ColorMatrix& a, const FilterMatrix& b )
 		{
-			Uint32 result = 0;
+			Int32 result = 0;
 			for ( Uint8 i = 0; i < 9; ++i )
 			{
 				result += a.arr[ i ] * b.arr[ i ];
 			}
+
+			if ( result < 0 )
+				return 0;
+			if ( result > 255 )
+				return 255;
 
 			return result;
 		}
@@ -103,7 +108,7 @@ namespace gf
 		m_currentPass = 0;
 	}
 
-	void ImageProcessor::FilterImage( Matrix33 filter )
+	void ImageProcessor::FilterImage( const FilterMatrix filter )
 	{
 		const Uint32 w = m_src->GetWidth() - 1;
 		const Uint32 h = m_src->GetHeight() - 1;
@@ -112,14 +117,17 @@ namespace gf
 		for ( Uint8 i = 0; i < 9; ++i )
 			filterSum += filter.arr[ i ];
 
-		Matrix33 currentPixels;
+		if ( filterSum == 0 )
+			filterSum = 1;
+
+		ColorMatrix currentPixels;
 		Uint32 pixelValue = 0;
 		for ( Uint32 i = 1; i < h; ++i )
 		{
 			for ( Uint32 j = 1; j < w; ++j )
 			{
 				currentPixels = SampleSurrounding( j, i );
-				pixelValue = helper::Combine( filter, currentPixels ) / filterSum;
+				pixelValue = helper::Combine( currentPixels, filter ) / filterSum;
 				m_output->SetValue< Uint8 >( ( Uint8 )pixelValue, j, i );
 			}
 		}
@@ -131,9 +139,9 @@ namespace gf
 		m_passes.push_back( pass ); 
 	}
 
-	Matrix33 ImageProcessor::SampleSurrounding( Uint32 x, Uint32 y ) const
+	ColorMatrix ImageProcessor::SampleSurrounding( Uint32 x, Uint32 y ) const
 	{
-		Matrix33 result;
+		ColorMatrix result;
 		--y;
 		result.arr[ 0 ] = m_src->GetValue< Uint8 >( x - 1, y );
 		result.arr[ 1 ] = m_src->GetValue< Uint8 >( x, y );

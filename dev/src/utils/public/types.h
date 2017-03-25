@@ -32,7 +32,7 @@ struct Color3
 	};
 };
 
-struct Matrix33
+struct ColorMatrix
 {
 	union
 	{
@@ -44,6 +44,21 @@ struct Matrix33
 		};
 
 		Uint8 arr[ 9 ];
+	};
+};
+
+struct FilterMatrix
+{
+	union
+	{
+		struct
+		{
+			Int8 m00, m10, m20;
+			Int8 m01, m11, m21;
+			Int8 m02, m12, m22;
+		};
+
+		Int8 arr[ 9 ];
 	};
 
 };
