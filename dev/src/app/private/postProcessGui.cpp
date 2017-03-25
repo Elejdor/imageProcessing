@@ -24,9 +24,7 @@ namespace gf
 		virtual void Draw() override
 		{
 			DrawDefault();
-			const int min = -255;
-			const int max = 255;
-			ImGui::SliderInt( "Brightness", &m_value, min, max );
+			ImGui::SliderInt( "Brightness", &m_value, -255, 255 );
 			m_effect.SetBrightness( m_value );
 		}
 
@@ -52,11 +50,9 @@ namespace gf
 		virtual void Draw() override
 		{
 			DrawDefault();
-			const int min = 0;
-			const int max = 255;
 
-			ImGui::SliderInt( "Min", &m_min, min, max );
-			ImGui::SliderInt( "Max", &m_max, min, max );
+			ImGui::SliderInt( "Min", &m_min, 0, 255 );
+			ImGui::SliderInt( "Max", &m_max, 0, 255 );
 
 			if ( m_min > m_max )
 				m_min = m_max;
@@ -86,10 +82,8 @@ namespace gf
 		virtual void Draw() override
 		{
 			DrawDefault();
-			const int min = -255;
-			const int max = 255;
 
-			ImGui::SliderInt( "Contrast enhancement", &m_val, min, max );
+			ImGui::SliderInt( "Contrast enhancement", &m_val, -255, 255 );
 
 			m_effect.SetContrast( m_val );
 		}
@@ -109,7 +103,7 @@ namespace gf
 	public:
 		NegateControl()
 			: m_active( true )
-			, EffectControl( "Contrast" )
+			, EffectControl( "Negate" )
 		{ }
 
 		virtual void Draw() override
@@ -125,6 +119,58 @@ namespace gf
 	private:
 		effects::Negate			m_effect;
 		Bool					m_active;
+	};
+
+	//////////////////////////////////////////////////////////////////////////
+	// LowPassFilter
+	//////////////////////////////////////////////////////////////////////////
+	class LowPassFilterControl : public EffectControl
+	{
+	public:
+		LowPassFilterControl()
+			: m_threshold( 255 )
+			, EffectControl( "Low-pass filter" )
+		{ }
+
+		virtual void Draw() override
+		{
+			DrawDefault();
+
+			ImGui::SliderInt( "Threshold", &m_threshold, 0, 255 );
+			m_effect.SetThreshold( m_threshold );
+		}
+
+		virtual IProcessingPass* GetEffect() override { return &m_effect; }
+
+	private:
+		effects::LowPassFilter	m_effect;
+		int						m_threshold;
+	};
+
+	//////////////////////////////////////////////////////////////////////////
+	// HighPassFilter
+	//////////////////////////////////////////////////////////////////////////
+	class HighPassFilterControl : public EffectControl
+	{
+	public:
+		HighPassFilterControl()
+			: m_threshold( 0 )
+			, EffectControl( "High-pass filter" )
+		{ }
+
+		virtual void Draw() override
+		{
+			DrawDefault();
+
+			ImGui::SliderInt( "Threshold", &m_threshold, 0, 255 );
+			m_effect.SetThreshold( m_threshold );
+		}
+
+		virtual IProcessingPass* GetEffect() override { return &m_effect; }
+
+	private:
+		effects::HighPassFilter	m_effect;
+		int						m_threshold;
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -147,6 +193,27 @@ namespace gf
 	{
 		ImGui::Begin( "Effects stack" );
 
+		if ( ImGui::Button( "Apply" ) )
+		{
+			if ( m_processor )
+				m_processor->ProcessImage();
+
+			// HACK
+			extern void SetMainImage( gf::Image* img );
+			SetMainImage( m_processor->GetOutput() );
+			m_processor->SetImage( m_img ); // reset processor's output
+		}
+
+		ImGui::SameLine();
+		if ( ImGui::Button( "Reset" ) )
+		{
+			for ( Int32 i = 0; i < m_effects.size(); ++i )
+				delete m_effects[ i ];
+
+			m_effects.clear();
+			ResetProcessor();
+		}
+
 		for ( Uint32 i = 0; i < m_effects.size(); ++i )
 		{
 			m_effects[ i ]->Draw();
@@ -160,11 +227,13 @@ namespace gf
 			effects::ChangeBrightness::GetName(), 
 			effects::Normalize::GetName(),
 			effects::ChangeContrast::GetName(),
-			effects::Negate::GetName()
+			effects::Negate::GetName(),
+			effects::LowPassFilter::GetName(),
+			effects::HighPassFilter::GetName()
 		};
 
 		ImGui::PushItemWidth( -1 );
-		ImGui::ListBox( "##effects", &currentItem, items, 3, 4 );
+		ImGui::ListBox( "##effects", &currentItem, items, 6, 7 );
 
 		if ( ImGui::Button( "Add" ) )
 		{
@@ -176,22 +245,15 @@ namespace gf
 				m_effects.push_back( new ContrastControl() );
 			else if ( currentItem == 3 )
 				m_effects.push_back( new NegateControl() );
+			else if ( currentItem == 4 )
+				m_effects.push_back( new LowPassFilterControl() );
+			else if ( currentItem == 5 )
+				m_effects.push_back( new HighPassFilterControl() );
 
 			ResetProcessor();
 		}
 
-		ImGui::SameLine();
-		if ( ImGui::Button( "Apply" ) )
-		{
-			if ( m_processor )
-				m_processor->ProcessImage();
-
-			// HACK
-			extern void SetMainImage( gf::Image* img );
-			SetMainImage( m_processor->GetOutput() );
-			m_processor->SetImage( m_img ); // reset processor's output
-		}
-
+		// linear filtering
 		static Int32 row[ 9 ] = { 0 };
 		ImGui::InputInt3( "##row1", row );
 		ImGui::InputInt3( "##row2", row + 3 );

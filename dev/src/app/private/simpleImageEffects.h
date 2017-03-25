@@ -187,5 +187,20 @@ namespace gf
 			Uint8				m_threshold;
 			Uint8				m_valueLUT[ 256 ];
 		};
+
+		//////////////////////////////////////////////////////////////////////////
+		// ValueHistogram
+		//////////////////////////////////////////////////////////////////////////
+		class ValueHistogram : public gf::IProcessingPass
+		{
+		public:
+			virtual Bool OnStarted( ImageProcessor* proc ) override;
+			virtual Uint8 Process( Uint8 input ) override;
+
+			static const char* GetName() { return "High-pass Filter"; }
+
+		private:
+			Uint32 m_values[ 255 ];
+		};
 	}
 }

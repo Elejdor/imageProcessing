@@ -247,9 +247,9 @@ namespace gf
 			for ( Uint16 i = 0; i < 256; ++i )
 			{
 				if ( i < m_threshold )
-					i = i;
+					m_valueLUT[ i ] = ( Uint8 )i;
 				else
-					i = 0;
+					m_valueLUT[ i ] = 0;
 			}
 			return true;
 		}
@@ -271,10 +271,11 @@ namespace gf
 			for ( Uint16 i = 0; i < 256; ++i )
 			{
 				if ( i > m_threshold )
-					i = i;
+					m_valueLUT[ i ] = ( Uint8 )i;
 				else
-					i = 0;
+					m_valueLUT[ i ] = 0;
 			}
+
 			return true;
 		}
 
@@ -288,5 +289,22 @@ namespace gf
 			SC_ASSERT( false, "Not implemented" );
 			return Color3();
 		}
-	}
+
+		//////////////////////////////////////////////////////////////////////////
+		// ValueHistogram
+		//////////////////////////////////////////////////////////////////////////
+		Bool ValueHistogram::OnStarted( ImageProcessor* proc )
+		{
+			for ( Uint8 i = 0; i < 255; ++i )
+				m_values[ i ] = 0;
+
+			return true;
+		}
+
+		Uint8 ValueHistogram::Process( Uint8 input )
+		{
+			++m_values[ input ];
+			return input;
+		}
+}
 }
