@@ -17,8 +17,8 @@ namespace gf
 
 			if ( result < 0 )
 				return 0;
-			if ( result > 255 )
-				return 255;
+			//if ( result > 255 )
+			//	return 255;
 
 			return result;
 		}
@@ -108,6 +108,32 @@ namespace gf
 		m_currentPass = 0;
 	}
 
+	void ImageProcessor::Rosenfeld( Uint8 r )
+	{
+		const Uint32 w = m_src->GetWidth() - r;
+		const Uint32 h = m_src->GetHeight();
+
+		for ( Uint32 i = 0; i < h; ++i )
+		{
+			for ( Uint32 j = r; j < w; ++j )
+			{
+				Int16 out = 0;
+				for ( Uint8 k = 0; k < r; ++k )
+				{
+					out += m_src->GetValue< Uint8 >( j + k, i );
+					out -= m_src->GetValue< Uint8 >( j - k - 1, i );
+				}
+				
+				if ( out < 0 )
+					out = 0;
+				else if ( out > 255 )
+					out = 255;
+
+				m_output->SetValue< Uint8 >( ( Uint8 )out, j, i );
+			}
+		}
+	}
+
 	void ImageProcessor::FilterImage( const FilterMatrix filter )
 	{
 		const Uint32 w = m_src->GetWidth() - 1;
@@ -127,16 +153,17 @@ namespace gf
 			for ( Uint32 j = 1; j < w; ++j )
 			{
 				currentPixels = SampleSurrounding( j, i );
+
 				pixelValue = helper::Combine( currentPixels, filter ) / filterSum;
 				m_output->SetValue< Uint8 >( ( Uint8 )pixelValue, j, i );
 			}
 		}
 	}
 
-	void ImageProcessor::AddPass( IProcessingPass* pass ) 
+	void ImageProcessor::AddPass( IProcessingPass* pass )
 	{
 		pass->OnEffectRegistered( this );
-		m_passes.push_back( pass ); 
+		m_passes.push_back( pass );
 	}
 
 	ColorMatrix ImageProcessor::SampleSurrounding( Uint32 x, Uint32 y ) const

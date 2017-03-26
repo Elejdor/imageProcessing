@@ -21,6 +21,10 @@ namespace gf
 		void SetImage( const Image* img );
 
 		void ProcessImage( Bool outputIsSource = false );
+
+		// HACK
+		void Rosenfeld( Uint8 r );
+
 		void FilterImage( const FilterMatrix filter );
 
 		virtual void OnProcessingEnd()

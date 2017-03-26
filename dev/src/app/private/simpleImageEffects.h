@@ -228,9 +228,6 @@ namespace gf
 			}
 
 		private:
-			Uint8 MapDensity( Uint8 value );
-
-		private:
 			const ValueHistogram* m_histogram;
 			Uint8 m_lut[ 256 ];
 

@@ -24,6 +24,17 @@ namespace gf
 
 				return val + add;
 			}
+
+			template< typename T >
+			Uint8 Clamp0255( T val )
+			{
+				if ( val > T( 255 ) )
+					return 255u;
+				if ( val < T( 0 ) )
+					return 0u;
+
+				return ( Uint8 )val;
+			}
 		}
 
 		//////////////////////////////////////////////////////////////////////////
@@ -112,7 +123,7 @@ namespace gf
 
 		void ChangeContrast::OnEffectRegistered( ImageProcessor* proc )
 		{
-			proc->AddPass( m_avg );			
+			proc->AddPass( m_avg );
 		}
 
 		//////////////////////////////////////////////////////////////////////////
@@ -318,8 +329,37 @@ namespace gf
 		//////////////////////////////////////////////////////////////////////////
 		Bool HistogramCorrection::OnStarted( ImageProcessor * proc )
 		{
-			for ( Uint16 i = 0; i < 256; ++i )
-				m_lut[ i ] = MapDensity( ( Uint8 )i );
+			//const std::array< Float, 256 >& histogram = m_histogram->GetData();
+			//static const Float exponent = 1.f / 3.f;
+			//const Float gMin = std::powf( m_min, exponent );
+			//const Float gMax = std::powf( m_max, exponent );
+
+			//const Double scale = ( Double )( gMax - gMin ) / proc->GetOutput()->GetSize(); // ( max - min ) / N
+			//Int64 sumPow = 0;
+			//for ( Uint32 i = 0; i < 256; ++i )
+			//{
+			//	//sum += ( int )histogram[ i ];
+			//	const Int64 h = ( Int64 )histogram[ i ];
+			//	sumPow += h * h * h; // sum( 0, f, h[m]^3 )
+			//	
+			//	const Int64 scaled = Int64( scale * sumPow );
+			//	m_lut[ i ] = helper::Clamp0255( Int64( gMin + scaled ) ); // min + ( max - min ) / N * sum
+			//}
+
+			const std::array< Float, 256 >& histogram = m_histogram->GetData();
+			static const Float exponent = 1.f / 3.f;
+
+			const Double scale = ( Double )( m_max - m_min ) / proc->GetOutput()->GetSize(); // ( max - min ) / N
+			Int64 sumPow = 0;
+			for ( Uint32 i = 0; i < 256; ++i )
+			{
+				//sum += ( int )histogram[ i ];
+				const Int64 h = ( Int64 )histogram[ i ];
+				sumPow += h; // sum( 0, f, h[m]^3 )
+
+				const Int64 scaled = Int64( scale * sumPow );
+				m_lut[ i ] = helper::Clamp0255( Int64( m_min + scaled ) ); // min + ( max - min ) / N * sum
+			}
 
 			return true;
 		}
@@ -334,29 +374,5 @@ namespace gf
 			SC_ASSERT( false, "Not implemented" );
 			return Color3();
 		}
-
-		Uint8 HistogramCorrection::MapDensity( Uint8 value )
-		{
-			Uint8 result;
-
-			static const Float exponent = 2.f / 3.f;
-			const Float gMin = std::powf( m_min, exponent );
-			const Float gMax = std::powf( m_max, exponent );
-
-			const std::array< Float, 256 >& histogram = m_histogram->GetData();
-
-			Float g = 0.0f;
-			for ( Uint16 i = 0; i < value; ++i )
-			{
-				g += histogram[ i ];
-			}
-
-			g /= ( Float )value + 1.f;
-			g *= ( gMax - gMin );
-			g += gMin;
-
-			result = ( Uint8 )g;
-			return result;
-		}
-}
+	}
 }

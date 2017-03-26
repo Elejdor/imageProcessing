@@ -193,11 +193,11 @@ namespace gf
 
 			if ( ImGui::Button( "Apply" ) )
 			{
-				if ( m_processor )
-					m_processor->ProcessImage();
+				ResetProcessor();
+
+				m_processor->ProcessImage();
 
 				// HACK
-				extern void SetMainImage( gf::Image* img );
 				SetMainImage( m_processor->GetOutput() );
 				m_processor->SetImage( m_img ); // reset processor's output
 			}
@@ -247,8 +247,17 @@ namespace gf
 					m_effects.push_back( new LowPassFilterControl() );
 				else if ( currentItem == 5 )
 					m_effects.push_back( new HighPassFilterControl() );
+			}
 
+			ImGui::Separator();
+			static Int32 rosenfeld = 0;
+			ImGui::SliderInt( "R", &rosenfeld, 0, 20 );
+			if ( ImGui::Button( "Rosenfeld operator" ) )
+			{
 				ResetProcessor();
+				m_processor->Rosenfeld( rosenfeld );
+				SetMainImage( m_processor->GetOutput() );
+				m_processor->SetImage( m_img ); // reset processor's output
 			}
 
 			ImGui::End();
@@ -256,7 +265,7 @@ namespace gf
 	};
 
 	//////////////////////////////////////////////////////////////////////////
-	// SimpleEffectsWnd
+	// LinearFilterIngWnd
 	//////////////////////////////////////////////////////////////////////////
 	class LinearFilterIngWnd : public PostProcessWindow
 	{
@@ -267,10 +276,107 @@ namespace gf
 			ImGui::Begin( "Linear filtering" );
 
 			// linear filtering
-			static Int32 row[ 9 ] = { 0 };
-			ImGui::InputInt3( "##row1", row );
-			ImGui::InputInt3( "##row2", row + 3 );
-			ImGui::InputInt3( "##row3", row + 6 );
+			static Int32 matrixData[ 9 ] = { 0 };
+			struct Mat33i
+			{
+				Mat33i( Int32 m00, Int32 m01, Int32 m02,
+						Int32 m10, Int32 m11, Int32 m12,
+						Int32 m20, Int32 m21, Int32 m22 )
+				{
+					arr[ 0 ] = m00; arr[ 1 ] = m01; arr[ 2 ] = m02;
+					arr[ 3 ] = m10; arr[ 4 ] = m11; arr[ 5 ] = m12;
+					arr[ 6 ] = m20; arr[ 7 ] = m21; arr[ 8 ] = m22;
+				}
+
+				Int32 arr[ 9 ];
+			};
+
+			if ( ImGui::Button( "North" ) )
+			{
+				static const Int32 pattern[ 9 ] = {
+					1, 1, 1,
+					1, -2, 1,
+					-1, -1, -1
+				};
+
+				memcpy( matrixData, pattern, 9 * sizeof( Int32 ) );
+			}
+
+			ImGui::SameLine();
+
+			if ( ImGui::Button( "North-east" ) )
+			{
+				static const Int32 pattern[ 9 ] = {
+					1, 1, 1,
+					-1, -2, 1,
+					-1, -1, 1
+				};
+
+				memcpy( matrixData, pattern, 9 * sizeof( Int32 ) );
+			}
+
+			ImGui::SameLine();
+			if ( ImGui::Button( "East" ) )
+			{
+				static const Int32 pattern[ 9 ] = {
+					-1, 1, 1,
+					-1, -2, 1,
+					-1, 1, 1
+				};
+
+				memcpy( matrixData, pattern, 9 * sizeof( Int32 ) );
+			}
+
+			ImGui::SameLine();
+			if ( ImGui::Button( "South-east" ) )
+			{
+				static const Int32 pattern[ 9 ] = {
+					-1, -1, 1,
+					-1, -2, 1,
+					1, 1, 1
+				};
+
+				memcpy( matrixData, pattern, 9 * sizeof( Int32 ) );
+			}
+
+			if ( ImGui::Button( "Gauss" ) )
+			{
+				static const Int32 pattern[ 9 ] = {
+					1, 2, 1,
+					2, 12, 2,
+					1, 2, 1
+				};
+
+				memcpy( matrixData, pattern, 9 * sizeof( Int32 ) );
+			}
+
+			ImGui::SameLine();
+			if ( ImGui::Button( "Laplacian" ) )
+			{
+				static const Int32 pattern[ 9 ] = {
+					0, 1, 0,
+					1, -4, 1,
+					0, 1, 0
+				};
+
+				memcpy( matrixData, pattern, 9 * sizeof( Int32 ) );
+			}
+
+			ImGui::SameLine();
+			if ( ImGui::Button( "Median" ) )
+			{
+				static const Int32 pattern[ 9 ] = {
+					1, 1, 1,
+					1, 1, 1,
+					1, 1, 1
+				};
+
+				memcpy( matrixData, pattern, 9 * sizeof( Int32 ) );
+			}
+
+			ImGui::InputInt3( "##row1", matrixData );
+			ImGui::InputInt3( "##row2", matrixData + 3 );
+			ImGui::InputInt3( "##row3", matrixData + 6 );
 
 			if ( ImGui::Button( "Apply filter" ) )
 			{
@@ -278,7 +384,7 @@ namespace gf
 
 				FilterMatrix filter;
 				for ( Uint8 i = 0; i < 9; ++i )
-					filter.arr[ i ] = static_cast< Uint8 >( row[ i ] );
+					filter.arr[ i ] = static_cast< Uint8 >( matrixData[ i ] );
 
 				m_processor->FilterImage( filter );
 				SetMainImage( m_processor->GetOutput() );
@@ -326,6 +432,8 @@ namespace gf
 				m_processor->ProcessImage();
 				SetMainImage( m_processor->GetOutput() );
 				m_effects.clear();
+				m_processor->AddPass( &m_histogram );
+				m_processor->ProcessImage( true );
 			}
 
 			ImGui::PlotHistogram(
