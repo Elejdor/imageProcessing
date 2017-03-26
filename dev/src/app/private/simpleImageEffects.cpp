@@ -306,5 +306,11 @@ namespace gf
 			++m_values[ input ];
 			return input;
 		}
+
+		Color3 ValueHistogram::Process( Color3 input )
+		{
+			SC_ASSERT( false, "Not implemented" );
+			return Color3();
+		}
 }
 }

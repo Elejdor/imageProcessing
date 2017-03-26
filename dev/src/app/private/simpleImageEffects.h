@@ -1,6 +1,8 @@
 #pragma once
 #include "processingPass.h"
 
+#include <array>
+
 namespace gf
 {
 	class ImageProcessor;
@@ -187,7 +189,7 @@ namespace gf
 			Uint8				m_threshold;
 			Uint8				m_valueLUT[ 256 ];
 		};
-
+		
 		//////////////////////////////////////////////////////////////////////////
 		// ValueHistogram
 		//////////////////////////////////////////////////////////////////////////
@@ -195,12 +197,16 @@ namespace gf
 		{
 		public:
 			virtual Bool OnStarted( ImageProcessor* proc ) override;
+
 			virtual Uint8 Process( Uint8 input ) override;
+			virtual Color3 Process( Color3 input ) override;
 
 			static const char* GetName() { return "High-pass Filter"; }
 
+			const std::array< Float, 256 >& GetData() const { return m_values; }
+
 		private:
-			Uint32 m_values[ 255 ];
+			std::array< Float, 256 > m_values;
 		};
 	}
 }

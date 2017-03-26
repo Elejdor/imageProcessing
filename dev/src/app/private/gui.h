@@ -1,6 +1,8 @@
 #pragma once
 #include "../../rendering/public/drawable.h"
+
 #include <memory>
+#include <vector>
 
 namespace gf
 {
@@ -17,6 +19,8 @@ namespace gf
 		void SetImage( Image* img );
 
 	private:
-		std::unique_ptr< PostProcessWindow > m_simpleEffects;
+		typedef std::unique_ptr< PostProcessWindow > WndUniquePtr;
+		typedef std::vector< WndUniquePtr > TWindows;
+		TWindows m_windows;
 	};
 }
