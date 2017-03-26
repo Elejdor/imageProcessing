@@ -141,7 +141,7 @@ namespace gf
 		{
 			DrawDefault();
 
-			ImGui::SliderInt( "Threshold", &m_threshold, 0, 255 );
+			ImGui::SliderInt( "Threshold ", &m_threshold, 0, 255 );
 			m_effect.SetThreshold( m_threshold );
 		}
 

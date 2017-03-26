@@ -19,6 +19,7 @@ namespace gf
 
 	void EffectControl::DrawDefault()
 	{
+		ImGui::Separator();
 		ImGui::Text( m_name.c_str() );
 	}
 

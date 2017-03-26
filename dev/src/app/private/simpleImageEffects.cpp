@@ -260,7 +260,7 @@ namespace gf
 				if ( i < m_threshold )
 					m_valueLUT[ i ] = ( Uint8 )i;
 				else
-					m_valueLUT[ i ] = 0;
+					m_valueLUT[ i ] = m_threshold;
 			}
 			return true;
 		}
@@ -276,7 +276,9 @@ namespace gf
 			return Color3();
 		}
 
+		//////////////////////////////////////////////////////////////////////////
 		// HighPassFilter
+		//////////////////////////////////////////////////////////////////////////
 		Bool HighPassFilter::OnStarted( ImageProcessor* proc )
 		{
 			for ( Uint16 i = 0; i < 256; ++i )
@@ -284,7 +286,7 @@ namespace gf
 				if ( i > m_threshold )
 					m_valueLUT[ i ] = ( Uint8 )i;
 				else
-					m_valueLUT[ i ] = 0;
+					m_valueLUT[ i ] = m_threshold;
 			}
 
 			return true;

@@ -98,6 +98,11 @@
     <ClInclude Include="public\image.h" />
     <ClInclude Include="public\rendering.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\utils\utils.vcxproj">
+      <Project>{b66c70a5-ef5b-42c8-bd70-b992f436a94b}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings" />
