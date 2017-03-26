@@ -208,5 +208,35 @@ namespace gf
 		private:
 			std::array< Float, 256 > m_values;
 		};
+
+		//////////////////////////////////////////////////////////////////////////
+		// HistogramCorrection
+		//////////////////////////////////////////////////////////////////////////
+		class HistogramCorrection : public gf::IProcessingPass
+		{
+		public:
+			void SetHistogram( const ValueHistogram* histogram ) { m_histogram = histogram; }
+
+			virtual Bool OnStarted( ImageProcessor* proc ) override;
+			virtual Uint8 Process( Uint8 input ) override;
+			virtual Color3 Process( Color3 input ) override;
+
+			void SetRange( Uint8 min, Uint8 max )
+			{
+				m_min = min;
+				m_max = max;
+			}
+
+		private:
+			Uint8 MapDensity( Uint8 value );
+
+		private:
+			const ValueHistogram* m_histogram;
+			Uint8 m_lut[ 256 ];
+
+			Uint8 m_min;
+			Uint8 m_max;
+
+		};
 	}
 }

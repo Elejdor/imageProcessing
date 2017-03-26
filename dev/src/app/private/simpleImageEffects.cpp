@@ -312,5 +312,51 @@ namespace gf
 			SC_ASSERT( false, "Not implemented" );
 			return Color3();
 		}
+
+		//////////////////////////////////////////////////////////////////////////
+		// HistogramCorrection
+		//////////////////////////////////////////////////////////////////////////
+		Bool HistogramCorrection::OnStarted( ImageProcessor * proc )
+		{
+			for ( Uint16 i = 0; i < 256; ++i )
+				m_lut[ i ] = MapDensity( ( Uint8 )i );
+
+			return true;
+		}
+
+		Uint8 HistogramCorrection::Process( Uint8 input )
+		{
+			return m_lut[ input ];
+		}
+
+		Color3 HistogramCorrection::Process( Color3 input )
+		{
+			SC_ASSERT( false, "Not implemented" );
+			return Color3();
+		}
+
+		Uint8 HistogramCorrection::MapDensity( Uint8 value )
+		{
+			Uint8 result;
+
+			static const Float exponent = 2.f / 3.f;
+			const Float gMin = std::powf( m_min, exponent );
+			const Float gMax = std::powf( m_max, exponent );
+
+			const std::array< Float, 256 >& histogram = m_histogram->GetData();
+
+			Float g = 0.0f;
+			for ( Uint16 i = 0; i < value; ++i )
+			{
+				g += histogram[ i ];
+			}
+
+			g /= ( Float )value + 1.f;
+			g *= ( gMax - gMin );
+			g += gMin;
+
+			result = ( Uint8 )g;
+			return result;
+		}
 }
 }

@@ -11,6 +11,8 @@
 
 #include <memory>
 
+extern void SetMainImage( gf::Image* img );
+
 namespace gf
 {
 	//////////////////////////////////////////////////////////////////////////
@@ -279,7 +281,6 @@ namespace gf
 					filter.arr[ i ] = static_cast< Uint8 >( row[ i ] );
 
 				m_processor->FilterImage( filter );
-				extern void SetMainImage( gf::Image* img );
 				SetMainImage( m_processor->GetOutput() );
 				m_processor->SetImage( m_img ); // reset processor's output
 			}
@@ -294,15 +295,37 @@ namespace gf
 	class HistogramWnd : public PostProcessWindow
 	{
 	public:
+		HistogramWnd()
+			: m_min( 0 )
+			, m_max( 255 )
+		{
+			m_correction.SetHistogram( &m_histogram );
+		}
+
 		// Inherited via PostProcessWindow
 		virtual void Draw() override
 		{
 			ImGui::Begin( "Histogram" );
+
+			ImGui::SliderInt( "Min. density", &m_min, 0, 255 );
+			ImGui::SliderInt( "Max. density", &m_max, 0, 255 );
+			m_correction.SetRange( m_min, m_max );
+
 			if ( ImGui::Button( "Calculate" ) )
 			{
 				ResetProcessor();
 				m_processor->AddPass( &m_histogram );
 				m_processor->ProcessImage( true );
+				m_effects.clear();
+			}
+
+			if ( ImGui::Button( "Apply correction" ) )
+			{
+				ResetProcessor();
+				m_processor->AddPass( &m_correction );
+				m_processor->ProcessImage();
+				SetMainImage( m_processor->GetOutput() );
+				m_effects.clear();
 			}
 
 			ImGui::PlotHistogram(
@@ -318,7 +341,10 @@ namespace gf
 		}
 
 	private:
-		effects::ValueHistogram m_histogram;
+		effects::ValueHistogram			m_histogram;
+		effects::HistogramCorrection	m_correction;
+		int m_min;
+		int m_max;
 	};
 
 	//////////////////////////////////////////////////////////////////////////
